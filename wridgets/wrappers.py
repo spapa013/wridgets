@@ -19,17 +19,21 @@ def _action_wrapper(action=None, output=None, overwrite_output=True, print_proce
             try:
                 action()
                 feedback_out.clear_output()
+                feedback_out.layout.display='none'
             except:
                 traceback.print_exc()
                 feedback_out.clear_output()
+                feedback_out.layout.display='none'
     else:
         try:
             action()
             feedback_out.clear_output()
+            feedback_out.layout.display='none'
             
         except:
             traceback.print_exc()
             feedback_out.clear_output()
+            feedback_out.layout.display='none'
 
 
 class Button:
