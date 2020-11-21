@@ -45,6 +45,9 @@ class Button:
     def _on_button_click(self, b):
         _action_wrapper(self.on_click, self.output, self.overwrite_output, self.print_processing)
 
+    def display(self):
+        display(self.button)
+
     def run(self):
         self.button.on_click(self._on_button_click)
 
@@ -69,6 +72,9 @@ class Checkbox:
             
         if not self.checkbox.value:
             _action_wrapper(self.on_uncheck, self.on_uncheck_output, self.on_uncheck_overwrite_output, self.print_processing)
-            
+    
+    def display(self):
+        display(self.checkbox)
+
     def run(self):
         self.checkbox.observe(self._on_change, names='value')
