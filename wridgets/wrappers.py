@@ -12,7 +12,7 @@ def _action_wrapper(action=None, output=None, overwrite_output=True, print_proce
         with feedback_out:
             print('Processing...')
     
-    if output:
+    if output is not None:
         with output:
             if overwrite_output:
                 clear_output()
@@ -47,6 +47,8 @@ class Button:
 
     def display(self):
         display(self.button)
+        if self.output is not None:
+            display(self.output)
 
     def run(self):
         self.button.on_click(self._on_button_click)
@@ -75,6 +77,8 @@ class Checkbox:
     
     def display(self):
         display(self.checkbox)
+        if self.output is not None:
+            display(self.output)
 
     def run(self):
         self.checkbox.observe(self._on_change, names='value')
