@@ -7,7 +7,6 @@ def _action_wrapper(action=None, output=None, overwrite_output=True, feedback_ou
         return
 
     if feedback_output is not None:
-        display(feedback_output)
         with feedback_output:
             print('Processing...')
     
@@ -17,18 +16,22 @@ def _action_wrapper(action=None, output=None, overwrite_output=True, feedback_ou
                 clear_output()
             try:
                 action()
-                del feedback_output
+                if feedback_output is not None:
+                    feedback_output.clear_output()
             except:
                 traceback.print_exc()
-                del feedback_output
+                if feedback_output is not None:
+                    feedback_output.clear_output()
     else:
         try:
             action()
-            del feedback_output
+            if feedback_output is not None:
+                feedback_output.clear_output()
             
         except:
             traceback.print_exc()
-            del feedback_output
+            if feedback_output is not None:
+                feedback_output.clear_output()
 
 
 class Button:
@@ -36,8 +39,12 @@ class Button:
         self.on_click = on_click
         self.output = output
         self.overwrite_output = overwrite_output
-        self.feedback_output = widgets.Output() if feedback else None
         self.button = widgets.Button(*args, **kwargs)
+
+        if feedback:
+            self.feedback_output = widgets.Output() 
+            display(self.feedback_output)
+
         if run:
             self.run()
     
@@ -62,8 +69,12 @@ class Checkbox:
         self.on_uncheck = on_uncheck
         self.on_uncheck_output = on_uncheck_output
         self.on_uncheck_overwrite_output = on_uncheck_overwrite_output
-        self.feedback_output = widgets.Output() if feedback else None
         self.checkbox = widgets.Checkbox(layout=layout, indent=indent, *args, **kwargs)
+
+        if feedback:
+            self.feedback_output = widgets.Output() 
+            display(self.feedback_output)
+
         if run:
             self.run()
 
