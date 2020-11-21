@@ -3,9 +3,8 @@ from IPython.display import HTML, display, clear_output
 import traceback
 
 def _action_wrapper(action=None, output=None, overwrite_output=True, feedback_output=None):
-    if not action:
+    if action is None:
         return
-    
 
     if feedback_output is not None:
         display(feedback_output)
@@ -18,18 +17,18 @@ def _action_wrapper(action=None, output=None, overwrite_output=True, feedback_ou
                 clear_output()
             try:
                 action()
-                feedback_output.clear_output()
+                del feedback_output
             except:
                 traceback.print_exc()
-                feedback_output.clear_output()
+                del feedback_output
     else:
         try:
             action()
-            feedback_output.clear_output()
+            del feedback_output
             
         except:
             traceback.print_exc()
-            feedback_output.clear_output()
+            del feedback_output
 
 
 class Button:
