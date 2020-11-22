@@ -26,8 +26,6 @@ def _action_wrapper(action=None, output=None, overwrite_output=True, feedback=Fa
         except:
             traceback.print_exc()
 
-
-
 class Button:
     def __init__(self, on_click=None, output=None, overwrite_output=True, run=True, feedback=False, *args, **kwargs):
         self.on_click = on_click
@@ -46,11 +44,6 @@ class Button:
     def _on_button_click(self, b):
         _action_wrapper(self.on_click, self.output, self.overwrite_output, self.feedback)
 
-    def display(self):
-        display(self.button)
-        if self.output is not None:
-            display(self.output)
-
     def run(self):
         self.button.on_click(self._on_button_click)
 
@@ -67,10 +60,6 @@ class Checkbox:
         self.feedback = feedback
         self.checkbox = widgets.Checkbox(layout=layout, indent=indent, *args, **kwargs)
 
-        # if feedback:
-        #     self.feedback_output = widgets.Output() 
-        #     display(self.feedback_output)
-
         if run:
             self.run()
 
@@ -80,11 +69,6 @@ class Checkbox:
             
         if not self.checkbox.value:
             _action_wrapper(self.on_uncheck, self.on_uncheck_output, self.on_uncheck_overwrite_output, self.feedback)
-    
-    def display(self):
-        display(self.checkbox)
-        if self.output is not None:
-            display(self.output)
 
     def run(self):
         self.checkbox.observe(self._on_change, names='value')
