@@ -1,4 +1,4 @@
-from ipywidgets import widgets, HBox, VBox, Label, Layout, GridBox, 
+from ipywidgets import widgets, HBox, VBox, Label, Layout, GridBox
 from IPython.display import display, clear_output, FileLink
 import traceback
 
