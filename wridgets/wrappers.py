@@ -33,11 +33,6 @@ class Button:
         self.overwrite_output = overwrite_output
         self.feedback = feedback
         self.button = widgets.Button(*args, **kwargs)
-
-        # if feedback:
-        #     self.feedback_output = widgets.Output() 
-        #     display(self.feedback_output)
-
         if run:
             self.run()
     
@@ -59,7 +54,6 @@ class Checkbox:
         self.on_uncheck_overwrite_output = on_uncheck_overwrite_output
         self.feedback = feedback
         self.checkbox = widgets.Checkbox(layout=layout, indent=indent, *args, **kwargs)
-
         if run:
             self.run()
 
@@ -72,3 +66,20 @@ class Checkbox:
 
     def run(self):
         self.checkbox.observe(self._on_change, names='value')
+
+
+class Dropdown:
+    def __init__(self, on_change=None, output=None, overwrite_output=True, run=True, feedback=False, *args, **kwargs):
+        self.on_click = on_change
+        self.output = output
+        self.overwrite_output = overwrite_output
+        self.feedback = feedback
+        self.button = widgets.Button(*args, **kwargs)
+        if run:
+            self.run()
+    
+    def _on_change(self, b):
+        _action_wrapper(self.on_change, self.output, self.overwrite_output, self.feedback)
+
+    def run(self):
+        self.button.observe(self._on_change, names='value')
