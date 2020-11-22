@@ -2,13 +2,9 @@ from ipywidgets import widgets
 from IPython.display import display, clear_output
 import traceback
 
-def _action_wrapper(action=None, output=None, overwrite_output=True, feedback=True):
+def _action_wrapper(action=None, output=None, overwrite_output=True, feedback=False):
     if action is None:
         return
-
-    # if feedback_output is not None:
-    #     with feedback_output:
-    #         print('Processing...')
     
     if output is not None:
         with output:
@@ -33,7 +29,7 @@ def _action_wrapper(action=None, output=None, overwrite_output=True, feedback=Tr
 
 
 class Button:
-    def __init__(self, on_click=None, output=None, overwrite_output=True, run=True, feedback=True, *args, **kwargs):
+    def __init__(self, on_click=None, output=None, overwrite_output=True, run=True, feedback=False, *args, **kwargs):
         self.on_click = on_click
         self.output = output
         self.overwrite_output = overwrite_output
@@ -61,7 +57,7 @@ class Button:
 
 class Checkbox:
     def __init__(self, on_check=None, on_uncheck=None, on_check_output=None, on_uncheck_output=None, on_check_overwrite_output=True, on_uncheck_overwrite_output=True,\
-                 layout={'width':'max-content'}, indent=False, run=True, feedback=True, *args, **kwargs):
+                 layout={'width':'max-content'}, indent=False, run=True, feedback=False, *args, **kwargs):
         self.on_check = on_check
         self.on_check_output = on_check_output
         self.on_check_overwrite_output = on_check_overwrite_output
