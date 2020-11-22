@@ -1,37 +1,35 @@
-from ipywidgets import widgets, HBox, VBox, Label, Layout
-from IPython.display import HTML, display, clear_output
+from ipywidgets import widgets
+from IPython.display import display, clear_output
 import traceback
 
-def _action_wrapper(action=None, output=None, overwrite_output=True, feedback_output=None):
+def _action_wrapper(action=None, output=None, overwrite_output=True, feedback=True):
     if action is None:
         return
 
-    if feedback_output is not None:
-        with feedback_output:
-            print('Processing...')
+    # if feedback_output is not None:
+    #     with feedback_output:
+    #         print('Processing...')
     
     if output is not None:
         with output:
             if overwrite_output:
                 clear_output()
+            if feedback:
+                print('Processing...')
+                clear_output(wait=True)
             try:
                 action()
-                if feedback_output is not None:
-                    feedback_output.clear_output()
             except:
                 traceback.print_exc()
-                if feedback_output is not None:
-                    feedback_output.clear_output()
     else:
+        if feedback:
+            print('Processing...')
+            clear_output(wait=True)
         try:
-            action()
-            if feedback_output is not None:
-                feedback_output.clear_output()
-            
+            action()    
         except:
             traceback.print_exc()
-            if feedback_output is not None:
-                feedback_output.clear_output()
+
 
 
 class Button:
@@ -39,17 +37,18 @@ class Button:
         self.on_click = on_click
         self.output = output
         self.overwrite_output = overwrite_output
+        self.feedback = feedback
         self.button = widgets.Button(*args, **kwargs)
 
-        if feedback:
-            self.feedback_output = widgets.Output() 
-            display(self.feedback_output)
+        # if feedback:
+        #     self.feedback_output = widgets.Output() 
+        #     display(self.feedback_output)
 
         if run:
             self.run()
     
     def _on_button_click(self, b):
-        _action_wrapper(self.on_click, self.output, self.overwrite_output, self.feedback_output)
+        _action_wrapper(self.on_click, self.output, self.overwrite_output, self.feedback)
 
     def display(self):
         display(self.button)
@@ -61,7 +60,7 @@ class Button:
 
 
 class Checkbox:
-    def __init__(self, on_check=None, on_uncheck=None, on_check_output=None, on_uncheck_output=None, on_check_overwrite_output=True,on_uncheck_overwrite_output=True,\
+    def __init__(self, on_check=None, on_uncheck=None, on_check_output=None, on_uncheck_output=None, on_check_overwrite_output=True, on_uncheck_overwrite_output=True,\
                  layout={'width':'max-content'}, indent=False, run=True, feedback=True, *args, **kwargs):
         self.on_check = on_check
         self.on_check_output = on_check_output
@@ -69,21 +68,22 @@ class Checkbox:
         self.on_uncheck = on_uncheck
         self.on_uncheck_output = on_uncheck_output
         self.on_uncheck_overwrite_output = on_uncheck_overwrite_output
+        self.feedback = feedback
         self.checkbox = widgets.Checkbox(layout=layout, indent=indent, *args, **kwargs)
 
-        if feedback:
-            self.feedback_output = widgets.Output() 
-            display(self.feedback_output)
+        # if feedback:
+        #     self.feedback_output = widgets.Output() 
+        #     display(self.feedback_output)
 
         if run:
             self.run()
 
     def _on_change(self, change):        
         if self.checkbox.value:
-            _action_wrapper(self.on_check, self.on_check_output, self.on_check_overwrite_output, self.feedback_output)
+            _action_wrapper(self.on_check, self.on_check_output, self.on_check_overwrite_output, self.feedback)
             
         if not self.checkbox.value:
-            _action_wrapper(self.on_uncheck, self.on_uncheck_output, self.on_uncheck_overwrite_output, self.feedback_output)
+            _action_wrapper(self.on_uncheck, self.on_uncheck_output, self.on_uncheck_overwrite_output, self.feedback)
     
     def display(self):
         display(self.checkbox)
