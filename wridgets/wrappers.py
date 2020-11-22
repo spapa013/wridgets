@@ -1,5 +1,5 @@
 from ipywidgets import widgets, HBox, VBox, Label, Layout, GridBox, Tabs, Stacked
-from IPython.display import display, clear_output
+from IPython.display import display, clear_output, FileLink
 import traceback
 
 def _action_wrapper(action=None, output=None, overwrite_output=True, feedback=False):
