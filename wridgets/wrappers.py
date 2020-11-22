@@ -74,7 +74,7 @@ class Dropdown:
         self.output = output
         self.overwrite_output = overwrite_output
         self.feedback = feedback
-        self.button = widgets.Button(*args, **kwargs)
+        self.button = widgets.Dropdown(*args, **kwargs)
         if run:
             self.run()
     
