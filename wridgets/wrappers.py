@@ -74,7 +74,7 @@ class Dropdown:
         self.output = output
         self.overwrite_output = overwrite_output
         self.feedback = feedback
-        self.button = widgets.Dropdown(*args, **kwargs)
+        self.dropdown = widgets.Dropdown(*args, **kwargs)
         if run:
             self.run()
     
@@ -82,4 +82,4 @@ class Dropdown:
         _action_wrapper(self.on_change, self.output, self.overwrite_output, self.feedback)
 
     def run(self):
-        self.button.observe(self._on_change, names='value')
+        self.dropdown.observe(self._on_change, names='value')
