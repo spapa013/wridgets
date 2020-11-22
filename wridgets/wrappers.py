@@ -1,6 +1,7 @@
 from ipywidgets import widgets
 from IPython.display import display, clear_output
 import traceback
+from ipywidgets.widgets import Output
 
 def _action_wrapper(action=None, output=None, overwrite_output=True, feedback=False):
     if action is None:
