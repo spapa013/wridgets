@@ -70,7 +70,7 @@ class Checkbox:
 
 class Dropdown:
     def __init__(self, on_change=None, output=None, overwrite_output=True, run=True, feedback=False, *args, **kwargs):
-        self.on_click = on_change
+        self.on_change = on_change
         self.output = output
         self.overwrite_output = overwrite_output
         self.feedback = feedback
