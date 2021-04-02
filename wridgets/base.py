@@ -43,7 +43,7 @@ class Base:
             display(self.output)
         
     def _action_on_interact(self, b):
-        _action_wrapper(self.on_interact, self.output, self.map_value, self.overwrite_previous_output, self.feedback)
+        _action_wrapper(self.on_interact, self.output, self.overwrite_previous_output, self.feedback)
 
 
 class BooleanBase:
@@ -73,11 +73,5 @@ class BooleanBase:
         if self.widget.value:
             _action_wrapper(self.on_true, self.on_true_output, self.on_true_overwrite_previous_output, self.on_true_feedback)
 
-            if self.map_value is not None:
-                self.map_value = self.widget.value
-            
         if not self.widget.value:
             _action_wrapper(self.on_false, self.on_false_output, self.on_false_overwrite_previous_output, self.on_false_feedback)
-
-            if self.map_value is not None:
-                self.map_value = self.widget.value
