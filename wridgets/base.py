@@ -51,13 +51,15 @@ class Base:
 
 
 class BooleanBase:
-    def __init__(self, on_true=None, on_false=None, on_true_output=None, on_false_output=None, on_true_overwrite_previous_output=True, on_false_overwrite_previous_output=True, on_true_feedback=False, on_false_feedback=False):
+    def __init__(self, on_true=None, on_false=None, on_true_output=None, on_false_output=None, map_value=None, on_true_overwrite_previous_output=True, on_false_overwrite_previous_output=True, on_true_feedback=False, on_false_feedback=False):
         self.on_true = on_true
         self.on_false = on_false
         
         self.on_true_output = on_true_output
         self.on_false_output = on_false_output
         
+        self.map_value = map_value
+
         self.on_true_overwrite_previous_output = on_true_overwrite_previous_output
         self.on_false_overwrite_previous_output = on_false_overwrite_previous_output
         
@@ -76,6 +78,12 @@ class BooleanBase:
     def _action_on_interact(self, change):        
         if self.widget.value:
             _action_wrapper(self.on_true, self.on_true_output, self.on_true_overwrite_previous_output, self.on_true_feedback)
+
+            if self.map_value is not None:
+                self.map_value = self.widget.value
             
         if not self.widget.value:
             _action_wrapper(self.on_false, self.on_false_output, self.on_false_overwrite_previous_output, self.on_false_feedback)
+
+            if self.map_value is not None:
+                self.map_value = self.widget.value
