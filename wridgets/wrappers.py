@@ -2,8 +2,8 @@ from ipywidgets import widgets
 from .base import Base, BooleanBase
 
 class IntSlider(Base):
-    def __init__(self, on_interact=None, output=None, map_value=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
-        super().__init__(on_interact=on_interact, output=output, map_value=map_value, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
+    def __init__(self, on_interact=None, output=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
+        super().__init__(on_interact=on_interact, output=output, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
         
         self.widget = widgets.IntSlider(*args, **kwargs)
         
@@ -14,8 +14,8 @@ class IntSlider(Base):
         self.widget.observe(self._action_on_interact, names='value')
 
 class FloatSlider(Base):
-    def __init__(self, on_interact=None, output=None, map_value=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
-        super().__init__(on_interact=on_interact, output=output, map_value=map_value, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
+    def __init__(self, on_interact=None, output=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
+        super().__init__(on_interact=on_interact, output=output, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
         
         self.widget = widgets.FloatSlider(*args, **kwargs)
         
@@ -26,8 +26,8 @@ class FloatSlider(Base):
         self.widget.observe(self._action_on_interact, names='value')
 
 class FloatLogSlider(Base):
-    def __init__(self, on_interact=None, output=None, map_value=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
-        super().__init__(on_interact=on_interact, output=output, map_value=map_value, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
+    def __init__(self, on_interact=None, output=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
+        super().__init__(on_interact=on_interact, output=output, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
         
         self.widget = widgets.FloatLogSlider(*args, **kwargs)
         
@@ -38,8 +38,8 @@ class FloatLogSlider(Base):
         self.widget.observe(self._action_on_interact, names='value')
 
 class IntRangeSlider(Base):
-    def __init__(self, on_interact=None, output=None, map_value=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
-        super().__init__(on_interact=on_interact, output=output, map_value=map_value, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
+    def __init__(self, on_interact=None, output=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
+        super().__init__(on_interact=on_interact, output=output, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
         
         self.widget = widgets.IntRangeSlider(*args, **kwargs)
         
@@ -50,8 +50,8 @@ class IntRangeSlider(Base):
         self.widget.observe(self._action_on_interact, names='value')
 
 class FloatRangeSlider(Base):
-    def __init__(self, on_interact=None, output=None, map_value=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
-        super().__init__(on_interact=on_interact, output=output, map_value=map_value, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
+    def __init__(self, on_interact=None, output=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
+        super().__init__(on_interact=on_interact, output=output, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
         
         self.widget = widgets.FloatRangeSlider(*args, **kwargs)
         
@@ -62,8 +62,8 @@ class FloatRangeSlider(Base):
         self.widget.observe(self._action_on_interact, names='value')
 
 class IntProgress(Base):
-    def __init__(self, on_interact=None, output=None, map_value=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
-        super().__init__(on_interact=on_interact, output=output, map_value=map_value, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
+    def __init__(self, on_interact=None, output=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
+        super().__init__(on_interact=on_interact, output=output, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
         
         self.widget = widgets.IntProgress(*args, **kwargs)
         
@@ -74,8 +74,8 @@ class IntProgress(Base):
         self.widget.observe(self._action_on_interact, names='value')
 
 class FloatProgress(Base):
-    def __init__(self, on_interact=None, output=None, map_value=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
-        super().__init__(on_interact=on_interact, output=output, map_value=map_value, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
+    def __init__(self, on_interact=None, output=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
+        super().__init__(on_interact=on_interact, output=output, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
         
         self.widget = widgets.FloatProgress(*args, **kwargs)
         
@@ -86,8 +86,8 @@ class FloatProgress(Base):
         self.widget.observe(self._action_on_interact, names='value')
 
 class BoundedIntText(Base):
-    def __init__(self, on_interact=None, output=None, map_value=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
-        super().__init__(on_interact=on_interact, output=output, map_value=map_value, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
+    def __init__(self, on_interact=None, output=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
+        super().__init__(on_interact=on_interact, output=output, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
         
         self.widget = widgets.BoundedIntText(*args, **kwargs)
         
@@ -98,8 +98,8 @@ class BoundedIntText(Base):
         self.widget.observe(self._action_on_interact, names='value')
 
 class BoundedFloatText(Base):
-    def __init__(self, on_interact=None, output=None, map_value=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
-        super().__init__(on_interact=on_interact, output=output, map_value=map_value, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
+    def __init__(self, on_interact=None, output=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
+        super().__init__(on_interact=on_interact, output=output, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
         
         self.widget = widgets.BoundedFloatText(*args, **kwargs)
         
@@ -110,8 +110,8 @@ class BoundedFloatText(Base):
         self.widget.observe(self._action_on_interact, names='value')
 
 class IntText(Base):
-    def __init__(self, on_interact=None, output=None, map_value=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
-        super().__init__(on_interact=on_interact, output=output, map_value=map_value, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
+    def __init__(self, on_interact=None, output=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
+        super().__init__(on_interact=on_interact, output=output, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
         
         self.widget = widgets.IntText(*args, **kwargs)
         
@@ -122,8 +122,8 @@ class IntText(Base):
         self.widget.observe(self._action_on_interact, names='value')
 
 class FloatText(Base):
-    def __init__(self, on_interact=None, output=None, map_value=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
-        super().__init__(on_interact=on_interact, output=output, map_value=map_value, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
+    def __init__(self, on_interact=None, output=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
+        super().__init__(on_interact=on_interact, output=output, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
         
         self.widget = widgets.FloatText(*args, **kwargs)
         
@@ -134,10 +134,10 @@ class FloatText(Base):
         self.widget.observe(self._action_on_interact, names='value')
 
 class ToggleButton(BooleanBase):
-    def __init__(self, on_true=None, on_false=None, on_true_output=None, on_false_output=None, map_value=None, \
+    def __init__(self, on_true=None, on_false=None, on_true_output=None, on_false_output=None, \
                  on_true_overwrite_previous_output=True, on_false_overwrite_previous_output=True, on_true_feedback=False, \
                  on_false_feedback=False, run=True, layout={'width':'max-content'}, indent=False, *args, **kwargs):
-        super().__init__(on_true=on_true, on_false=on_false, on_true_output=on_true_output, on_false_output=on_false_output, map_value=map_value, \
+        super().__init__(on_true=on_true, on_false=on_false, on_true_output=on_true_output, on_false_output=on_false_output, \
                  on_true_overwrite_previous_output=on_true_overwrite_previous_output, on_false_overwrite_previous_output=on_false_overwrite_previous_output, on_true_feedback=on_true_feedback, \
                  on_false_feedback=on_false_feedback)
         
@@ -150,10 +150,10 @@ class ToggleButton(BooleanBase):
         self.widget.observe(self._action_on_interact, names='value')
 
 class Checkbox(BooleanBase):
-    def __init__(self, on_true=None, on_false=None, on_true_output=None, on_false_output=None, map_value=None, \
+    def __init__(self, on_true=None, on_false=None, on_true_output=None, on_false_output=None, \
                  on_true_overwrite_previous_output=True, on_false_overwrite_previous_output=True, on_true_feedback=False, \
                  on_false_feedback=False, run=True, layout={'width':'max-content'}, indent=False, *args, **kwargs):
-        super().__init__(on_true=on_true, on_false=on_false, on_true_output=on_true_output, on_false_output=on_false_output, map_value=map_value, \
+        super().__init__(on_true=on_true, on_false=on_false, on_true_output=on_true_output, on_false_output=on_false_output, \
                  on_true_overwrite_previous_output=on_true_overwrite_previous_output, on_false_overwrite_previous_output=on_false_overwrite_previous_output, on_true_feedback=on_true_feedback, \
                  on_false_feedback=on_false_feedback)
         
@@ -166,10 +166,10 @@ class Checkbox(BooleanBase):
         self.widget.observe(self._action_on_interact, names='value')
 
 class Valid(BooleanBase):
-    def __init__(self, on_true=None, on_false=None, on_true_output=None, on_false_output=None, map_value=None, \
+    def __init__(self, on_true=None, on_false=None, on_true_output=None, on_false_output=None, \
                  on_true_overwrite_previous_output=True, on_false_overwrite_previous_output=True, on_true_feedback=False, \
                  on_false_feedback=False, run=True, layout={'width':'max-content'}, indent=False, *args, **kwargs):
-        super().__init__(on_true=on_true, on_false=on_false, on_true_output=on_true_output, on_false_output=on_false_output, map_value=map_value, \
+        super().__init__(on_true=on_true, on_false=on_false, on_true_output=on_true_output, on_false_output=on_false_output, \
                  on_true_overwrite_previous_output=on_true_overwrite_previous_output, on_false_overwrite_previous_output=on_false_overwrite_previous_output, on_true_feedback=on_true_feedback, \
                  on_false_feedback=on_false_feedback)
         
@@ -182,8 +182,8 @@ class Valid(BooleanBase):
         self.widget.observe(self._action_on_interact, names='value')
 
 class Dropdown(Base):
-    def __init__(self, on_interact=None, output=None, map_value=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
-        super().__init__(on_interact=on_interact, output=output, map_value=map_value, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
+    def __init__(self, on_interact=None, output=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
+        super().__init__(on_interact=on_interact, output=output, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
         
         self.widget = widgets.Dropdown(*args, **kwargs)
         
@@ -194,8 +194,8 @@ class Dropdown(Base):
         self.widget.observe(self._action_on_interact, names='value')
 
 class RadioButtons(Base):
-    def __init__(self, on_interact=None, output=None, map_value=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
-        super().__init__(on_interact=on_interact, output=output, map_value=map_value, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
+    def __init__(self, on_interact=None, output=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
+        super().__init__(on_interact=on_interact, output=output, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
         
         self.widget = widgets.RadioButtons(*args, **kwargs)
         
@@ -206,8 +206,8 @@ class RadioButtons(Base):
         self.widget.observe(self._action_on_interact, names='value')
 
 class Select(Base):
-    def __init__(self, on_interact=None, output=None, map_value=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
-        super().__init__(on_interact=on_interact, output=output, map_value=map_value, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
+    def __init__(self, on_interact=None, output=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
+        super().__init__(on_interact=on_interact, output=output, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
         
         self.widget = widgets.Select(*args, **kwargs)
         
@@ -218,8 +218,8 @@ class Select(Base):
         self.widget.observe(self._action_on_interact, names='value')
 
 class SelectionSlider(Base):
-    def __init__(self, on_interact=None, output=None, map_value=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
-        super().__init__(on_interact=on_interact, output=output, map_value=map_value, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
+    def __init__(self, on_interact=None, output=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
+        super().__init__(on_interact=on_interact, output=output, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
         
         self.widget = widgets.SelectionSlider(*args, **kwargs)
         
@@ -230,8 +230,8 @@ class SelectionSlider(Base):
         self.widget.observe(self._action_on_interact, names='value')
 
 class SelectionRangeSlider(Base):
-    def __init__(self, on_interact=None, output=None, map_value=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
-        super().__init__(on_interact=on_interact, output=output, map_value=map_value, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
+    def __init__(self, on_interact=None, output=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
+        super().__init__(on_interact=on_interact, output=output, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
         
         self.widget = widgets.SelectionRangeSlider(*args, **kwargs)
         
@@ -242,8 +242,8 @@ class SelectionRangeSlider(Base):
         self.widget.observe(self._action_on_interact, names='value')
 
 class ToggleButtons(Base):
-    def __init__(self, on_interact=None, output=None, map_value=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
-        super().__init__(on_interact=on_interact, output=output, map_value=map_value, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
+    def __init__(self, on_interact=None, output=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
+        super().__init__(on_interact=on_interact, output=output, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
         
         self.widget = widgets.ToggleButtons(*args, **kwargs)
         
@@ -254,8 +254,8 @@ class ToggleButtons(Base):
         self.widget.observe(self._action_on_interact, names='value')
 
 class SelectMultiple(Base):
-    def __init__(self, on_interact=None, output=None, map_value=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
-        super().__init__(on_interact=on_interact, output=output, map_value=map_value, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
+    def __init__(self, on_interact=None, output=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
+        super().__init__(on_interact=on_interact, output=output, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
         
         self.widget = widgets.SelectMultiple(*args, **kwargs)
         
@@ -266,8 +266,8 @@ class SelectMultiple(Base):
         self.widget.observe(self._action_on_interact, names='value')
 
 class Text(Base):
-    def __init__(self, on_interact=None, output=None, map_value=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
-        super().__init__(on_interact=on_interact, output=output, map_value=map_value, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
+    def __init__(self, on_interact=None, output=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
+        super().__init__(on_interact=on_interact, output=output, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
         
         self.widget = widgets.Text(*args, **kwargs)
         
@@ -278,8 +278,8 @@ class Text(Base):
         self.widget.observe(self._action_on_interact, names='value')
 
 class Textarea(Base):
-    def __init__(self, on_interact=None, output=None, map_value=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
-        super().__init__(on_interact=on_interact, output=output, map_value=map_value, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
+    def __init__(self, on_interact=None, output=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
+        super().__init__(on_interact=on_interact, output=output, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
         
         self.widget = widgets.Textarea(*args, **kwargs)
         
@@ -290,8 +290,8 @@ class Textarea(Base):
         self.widget.observe(self._action_on_interact, names='value')
 
 class Combobox(Base):
-    def __init__(self, on_interact=None, output=None, map_value=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
-        super().__init__(on_interact=on_interact, output=output, map_value=map_value, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
+    def __init__(self, on_interact=None, output=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
+        super().__init__(on_interact=on_interact, output=output, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
         
         self.widget = widgets.Combobox(*args, **kwargs)
         
@@ -302,8 +302,8 @@ class Combobox(Base):
         self.widget.observe(self._action_on_interact, names='value')
 
 class Password(Base):
-    def __init__(self, on_interact=None, output=None, map_value=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
-        super().__init__(on_interact=on_interact, output=output, map_value=map_value, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
+    def __init__(self, on_interact=None, output=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
+        super().__init__(on_interact=on_interact, output=output, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
         
         self.widget = widgets.Password(*args, **kwargs)
         
@@ -314,8 +314,8 @@ class Password(Base):
         self.widget.observe(self._action_on_interact, names='value')
 
 class Play(Base):
-    def __init__(self, on_interact=None, output=None, map_value=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
-        super().__init__(on_interact=on_interact, output=output, map_value=map_value, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
+    def __init__(self, on_interact=None, output=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
+        super().__init__(on_interact=on_interact, output=output, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
         
         self.widget = widgets.Play(*args, **kwargs)
         
@@ -326,8 +326,8 @@ class Play(Base):
         self.widget.observe(self._action_on_interact, names='value')
 
 class DatePicker(Base):
-    def __init__(self, on_interact=None, output=None, map_value=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
-        super().__init__(on_interact=on_interact, output=output, map_value=map_value, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
+    def __init__(self, on_interact=None, output=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
+        super().__init__(on_interact=on_interact, output=output, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
         
         self.widget = widgets.DatePicker(*args, **kwargs)
         
@@ -338,8 +338,8 @@ class DatePicker(Base):
         self.widget.observe(self._action_on_interact, names='value')
 
 class ColorPicker(Base):
-    def __init__(self, on_interact=None, output=None, map_value=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
-        super().__init__(on_interact=on_interact, output=output, map_value=map_value, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
+    def __init__(self, on_interact=None, output=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
+        super().__init__(on_interact=on_interact, output=output, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
         
         self.widget = widgets.ColorPicker(*args, **kwargs)
         
@@ -350,8 +350,8 @@ class ColorPicker(Base):
         self.widget.observe(self._action_on_interact, names='value')
 
 class FileUpload(Base):
-    def __init__(self, on_interact=None, output=None, map_value=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
-        super().__init__(on_interact=on_interact, output=output, map_value=map_value, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
+    def __init__(self, on_interact=None, output=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
+        super().__init__(on_interact=on_interact, output=output, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
         
         self.widget = widgets.FileUpload(*args, **kwargs)
         
@@ -362,8 +362,8 @@ class FileUpload(Base):
         self.widget.observe(self._action_on_interact, names='value')
 
 class Image(Base):
-    def __init__(self, on_interact=None, output=None, map_value=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
-        super().__init__(on_interact=on_interact, output=output, map_value=map_value, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
+    def __init__(self, on_interact=None, output=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
+        super().__init__(on_interact=on_interact, output=output, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
         
         self.widget = widgets.Image(*args, **kwargs)
         

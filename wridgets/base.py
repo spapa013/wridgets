@@ -30,10 +30,9 @@ def _action_wrapper(action=None, output=None, overwrite_previous_output=True, fe
 
 
 class Base:
-    def __init__(self, on_interact=None, output=None, map_value=None, overwrite_previous_output=True, feedback=False):
+    def __init__(self, on_interact=None, output=None, overwrite_previous_output=True, feedback=False):
         self.on_interact = on_interact
         self.output = output
-        self.map_value = map_value
         self.overwrite_previous_output = overwrite_previous_output
         self.feedback = feedback
         self.widget = None
@@ -45,20 +44,15 @@ class Base:
         
     def _action_on_interact(self, b):
         _action_wrapper(self.on_interact, self.output, self.map_value, self.overwrite_previous_output, self.feedback)
-        
-        if self.map_value is not None:
-            self.map_value = self.widget.value
 
 
 class BooleanBase:
-    def __init__(self, on_true=None, on_false=None, on_true_output=None, on_false_output=None, map_value=None, on_true_overwrite_previous_output=True, on_false_overwrite_previous_output=True, on_true_feedback=False, on_false_feedback=False):
+    def __init__(self, on_true=None, on_false=None, on_true_output=None, on_false_output=None, on_true_overwrite_previous_output=True, on_false_overwrite_previous_output=True, on_true_feedback=False, on_false_feedback=False):
         self.on_true = on_true
         self.on_false = on_false
         
         self.on_true_output = on_true_output
         self.on_false_output = on_false_output
-        
-        self.map_value = map_value
 
         self.on_true_overwrite_previous_output = on_true_overwrite_previous_output
         self.on_false_overwrite_previous_output = on_false_overwrite_previous_output
