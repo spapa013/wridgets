@@ -277,6 +277,33 @@ class Text(Base):
     def run(self):
         self.widget.observe(self._action_on_interact, names='value')
 
+
+class HTML(Base):
+    def __init__(self, on_interact=None, output=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
+        super().__init__(on_interact=on_interact, output=output, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
+        
+        self.widget = widgets.HTML(*args, **kwargs)
+        
+        if run:
+            self.run()
+            
+    def run(self):
+        self.widget.observe(self._action_on_interact, names='value')
+
+
+class HTMLMath(Base):
+    def __init__(self, on_interact=None, output=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
+        super().__init__(on_interact=on_interact, output=output, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
+        
+        self.widget = widgets.HTMLMath(*args, **kwargs)
+        
+        if run:
+            self.run()
+            
+    def run(self):
+        self.widget.observe(self._action_on_interact, names='value')
+
+
 class Textarea(Base):
     def __init__(self, on_interact=None, output=None, overwrite_previous_output=True, feedback=False, run=True, *args, **kwargs):
         super().__init__(on_interact=on_interact, output=output, overwrite_previous_output=overwrite_previous_output, feedback=feedback)
