@@ -36,15 +36,27 @@ class Base:
         self.overwrite_previous_output = overwrite_previous_output
         self.feedback = feedback
         self.action_kws = action_kws
+        self.action_disabled = False
         self.widget = None
         
+
     def display(self):
         display(self.widget)
         if self.output is not None:
             display(self.output)
+
+
+    def enable_action(self):
+        self.action_disabled = False
+
+
+    def disable_action(self):
+        self.action_disabled = True
+        
         
     def _action_on_interact(self, b):
-        _action_wrapper(action=self.on_interact, output=self.output, overwrite_previous_output=self.overwrite_previous_output, feedback=self.feedback, action_kws=self.action_kws)
+        if not self.action_disabled:
+            _action_wrapper(action=self.on_interact, output=self.output, overwrite_previous_output=self.overwrite_previous_output, feedback=self.feedback, action_kws=self.action_kws)
 
 
 class BooleanBase:
@@ -63,19 +75,42 @@ class BooleanBase:
 
         self.on_true_action_kws = on_true_action_kws
         self.on_false_action_kws = on_false_action_kws
+
+        self.on_true_action_disabled = False
+        self.on_false_action_disabled = False
                 
         self.widget = None
     
+
     def display(self):
         display(self.widget)
         if self.on_true_output is not None:
             display(self.on_true_output)
         if self.on_false_output is not None:
             display(self.on_false_output)
-            
+
+
+    def enable_on_true_action(self):
+        self.on_true_action_disabled = False
+
+
+    def disable_on_true_action(self):
+        self.on_true_action_disabled = True
+
+
+    def enable_on_false_action(self):
+        self.on_false_action_disabled = False
+
+
+    def disable_on_false_action(self):
+        self.on_false_action_disabled = True
+
+
     def _action_on_interact(self, change):        
         if self.widget.value:
-            _action_wrapper(action=self.on_true, output=self.on_true_output, overwrite_previous_output=self.on_true_overwrite_previous_output, feedback=self.on_true_feedback, action_kws=self.on_true_action_kws)
+            if not self.on_true_action_disabled:
+                _action_wrapper(action=self.on_true, output=self.on_true_output, overwrite_previous_output=self.on_true_overwrite_previous_output, feedback=self.on_true_feedback, action_kws=self.on_true_action_kws)
 
         if not self.widget.value:
-            _action_wrapper(action=self.on_false, output=self.on_false_output, overwrite_previous_output=self.on_false_overwrite_previous_output, feedback=self.on_false_feedback, action_kws=self.on_false_action_kws)
+            if not self.on_false_action_disabled:
+                _action_wrapper(action=self.on_false, output=self.on_false_output, overwrite_previous_output=self.on_false_overwrite_previous_output, feedback=self.on_false_feedback, action_kws=self.on_false_action_kws)
