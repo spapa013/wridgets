@@ -52,8 +52,18 @@ class Base:
 
     def disable_action(self):
         self.action_disabled = True
+
+
+    def update_value(self, value, action=True):
+        if action:
+            self.widget.value = value 
         
-        
+        else:
+            self.disable_action()
+            self.widget.value = value
+            self.enable_action()
+
+
     def _action_on_interact(self, b):
         if not self.action_disabled:
             _action_wrapper(action=self.on_interact, output=self.output, overwrite_previous_output=self.overwrite_previous_output, feedback=self.feedback, action_kws=self.action_kws)
@@ -104,6 +114,18 @@ class BooleanBase:
 
     def disable_on_false_action(self):
         self.on_false_action_disabled = True
+
+    
+    def update_value(self, value, action=True):
+        if action:
+            self.widget.value = value 
+        
+        else:
+            self.disable_on_true_action()
+            self.disable_on_false_action()
+            self.widget.value = value
+            self.enable_on_true_action()
+            self.enable_on_false_action()
 
 
     def _action_on_interact(self, change):        
