@@ -1,7 +1,7 @@
-from ipywidgets import widgets, HBox, VBox, Label, Layout, GridBox
-from IPython.display import display, clear_output, FileLink
+from IPython.display import FileLink, clear_output, display
+from ipywidgets import GridBox, HBox, Label, Layout, VBox, Box, widgets
 from ipywidgets.widgets import Output
 
-from .wrappers import IntSlider, FloatSlider, FloatLogSlider, IntRangeSlider, FloatRangeSlider, IntProgress, FloatProgress, BoundedIntText, \
-    BoundedFloatText, IntText, FloatText, ToggleButton, Checkbox, Valid, Dropdown, RadioButtons, Select, SelectionSlider, SelectionRangeSlider, \
-        ToggleButtons, SelectMultiple, Text, HTML, HTMLMath, Textarea, Combobox, Password, Play, DatePicker, ColorPicker, FileUpload, Image, Button
+from .version import __version__
+from .utils import *
+from .wridgets import *
