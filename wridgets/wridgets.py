@@ -1,7 +1,7 @@
 from functools import wraps
 from .base import BooleanBase, StandardBase
 
-standard_widgets = ['Audio'
+standard_widgets = ['Audio',
                     'HTML',
                     'BoundedFloatText',
                     'BoundedIntText',
