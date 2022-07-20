@@ -3,6 +3,7 @@ from hashlib import md5
 import traceback
 
 from IPython.display import display
+from ipywidgets import Label, VBox
 
 from . import wridgets as wr
 from .utils import wrap
@@ -61,7 +62,7 @@ class App:
     
     def __new__(cls, *args, **kwargs):
         obj = object.__new__(cls)
-        obj.app = wr.VBox()
+        obj.app = VBox()
         return obj
     
     def __init_subclass__(cls):        
