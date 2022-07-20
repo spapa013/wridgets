@@ -325,6 +325,7 @@ class Wridget:
 class Label(App, Wridget):
     _widget_types = 'HTML',
     def make(self, **kwargs):
+        self.set_config(**kwargs)
         kwargs.setdefault('widget_type', 'HTML')
         kwargs.setdefault('label', '')
         kwargs.setdefault('fontsize', 1)
@@ -336,6 +337,7 @@ class Label(App, Wridget):
 class Button(App, Wridget):
     _widget_types = 'Button',
     def make(self, **kwargs):
+        self.set_config(**kwargs)
         kwargs.setdefault('widget_type', 'Button')
         kwargs.setdefault('value', None)
         kwargs.setdefault('layout', {'width': 'auto'})
@@ -346,6 +348,7 @@ class Button(App, Wridget):
 class Field(App, Wridget):
     _widget_types = ('Text', 'Textarea', 'IntText', 'FloatText', 'BoundedIntText', 'BoundedFloatText')
     def make(self, **kwargs):
+        self.set_config(**kwargs)
         kwargs.setdefault('widget_type', 'Text')
         kwargs.setdefault('continuous_update', False)
         kwargs.setdefault('layout', {'width': 'auto'})
@@ -356,6 +359,7 @@ class Field(App, Wridget):
 class SelectButtons(App, Wridget):
     _widget_types = 'ToggleButtons', 'RadioButtons'
     def make(self, **kwargs):
+        self.set_config(**kwargs)
         kwargs.setdefault('widget_type', 'ToggleButtons')
         kwargs.setdefault('options', ())
         kwargs.setdefault('style', {'button_width': 'auto'})
@@ -366,6 +370,7 @@ class SelectButtons(App, Wridget):
 class ToggleButton(App, Wridget):
     _widget_types = 'ToggleButton',
     def make(self, **kwargs):
+        self.set_config(**kwargs)
         kwargs.setdefault('widget_type', 'ToggleButton')
         kwargs.setdefault('style', {'button_width': 'auto'})
         self.set_config(**kwargs, update=True)
@@ -375,6 +380,7 @@ class ToggleButton(App, Wridget):
 class Dropdown(App, Wridget):
     _widget_types = 'Dropdown',
     def make(self, **kwargs):
+        self.set_config(**kwargs)
         kwargs.setdefault('widget_type', 'Dropdown')
         kwargs.setdefault('layout',  {'width': 'auto'})
         self.set_config(**kwargs, update=True)
@@ -384,6 +390,7 @@ class Dropdown(App, Wridget):
 class Link(App, Wridget):
     _widget_types = 'HTML'
     def make(self, **kwargs):
+        self.set_config(**kwargs)
         kwargs.setdefault('widget_type', 'HTML')
         kwargs.setdefault('src', '')
         kwargs.setdefault('text', kwargs.get('src'))
