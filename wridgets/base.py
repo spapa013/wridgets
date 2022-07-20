@@ -1,9 +1,14 @@
-import ipywidgets as widgets
-from IPython.display import display, clear_output
+from IPython.display import FileLink, clear_output, display
+from ipywidgets import Output, GridBox, HBox, Label, Layout, VBox, Box, widgets
 import traceback
 
 
 class Base:
+    def __init__(self, observe=True, *args, **kwargs):
+        self.widget = getattr(widgets, self.__class__.__name__)(*args, **kwargs)
+        if observe:
+            self.observe()
+
     @staticmethod
     def _on_interact_wrapper(on_interact, output, overwrite_previous_output, on_interact_kws, is_disabled):
         if on_interact is None or is_disabled:
@@ -24,17 +29,19 @@ class Base:
     def observe(self):
         self.widget.observe(self._observe, names='value')
 
+    def _observe(self, change):
+        self._on_interact_wrapper(on_interact=self.on_interact, output=self.output,
+                        overwrite_previous_output=self.overwrite_previous_output, on_interact_kws=self.on_interact_kws, is_disabled=self.on_interact_disabled)
+
 
 class StandardBase(Base):
-    def __init__(self, on_interact=None, output=None, overwrite_previous_output=True, on_interact_kws=None, observe=True, *args, **kwargs):
+    def __init__(self, on_interact=None, output=None, overwrite_previous_output=True, on_interact_kws=None, *args, **kwargs):
         self.on_interact = on_interact
         self.output = output
         self.overwrite_previous_output = overwrite_previous_output
         self.on_interact_kws = {} if on_interact_kws is None else on_interact_kws
         self.on_interact_disabled = False
-        self.widget = getattr(widgets, self.__class__.__name__)(*args, **kwargs)
-        if observe:
-            self.observe()
+        super().__init__(*args, **kwargs)
 
     def display(self):
         display(self.widget)
@@ -56,13 +63,9 @@ class StandardBase(Base):
             self.widget.value = value
             self.enable_on_interact()
 
-    def _observe(self, change):
-        self._on_interact_wrapper(on_interact=self.on_interact, output=self.output,
-                        overwrite_previous_output=self.overwrite_previous_output, on_interact_kws=self.on_interact_kws, is_disabled=self.on_interact_disabled)
-
 
 class BooleanBase(Base):
-    def __init__(self, on_true=None, on_false=None, on_true_output=None, on_false_output=None, on_true_overwrite_previous_output=True, on_false_overwrite_previous_output=True, on_true_on_interact_kws=None, on_false_on_interact_kws=None, observe=True, *args, **kwargs):
+    def __init__(self, on_true=None, on_false=None, on_true_output=None, on_false_output=None, on_true_overwrite_previous_output=True, on_false_overwrite_previous_output=True, on_true_on_interact_kws=None, on_false_on_interact_kws=None, *args, **kwargs):
         self.on_true = on_true
         self.on_false = on_false
         self.on_true_output = on_true_output
@@ -73,9 +76,7 @@ class BooleanBase(Base):
         self.on_false_on_interact_kws = {} if on_false_on_interact_kws is None else on_false_on_interact_kws
         self.on_true_on_interact_disabled = False
         self.on_false_on_interact_disabled = False
-        self.widget = getattr(widgets, self.__class__.__name__)(*args, **kwargs)
-        if observe:
-            self.observe()
+        super().__init__(*args, **kwargs)
 
     def display(self):
         display(self.widget)

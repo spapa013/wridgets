@@ -1,9 +1,6 @@
 import functools
-from hashlib import md5
 import traceback
-
-from IPython.display import display
-from ipywidgets import Label, VBox
+from hashlib import md5
 
 from . import wridgets as wr
 from .utils import wrap
@@ -19,7 +16,7 @@ class App:
         setattr(cls, store, property(getter))
 
     def display(self):
-        display(
+        wr.display(
             self.app
         )
     
@@ -32,7 +29,7 @@ class App:
                     return func(self, *args, **kwargs)
                 except Exception as e:
                     tb = traceback.format_exc()  
-                    display(
+                    wr.display(
                         wr.HBox([
                             wr.Button(
                                 on_interact=self._output.clear_output, 
@@ -53,7 +50,7 @@ class App:
     
     @with_output
     def print_traceback(self, tb):
-        display(wr.Button(
+        wr.display(wr.Button(
             on_interact=self._output.clear_output, 
             button_style='info', 
             description='Clear Output'
@@ -62,7 +59,7 @@ class App:
     
     def __new__(cls, *args, **kwargs):
         obj = object.__new__(cls)
-        obj.app = VBox()
+        obj.app = wr.VBox()
         return obj
     
     def __init_subclass__(cls):        
@@ -128,7 +125,7 @@ class App:
     def message(self, msg:str):
         with self.output:
             self.clear_output()
-            (Label(label=msg, fontsize=0.5) + 
+            (wr.Label(label=msg, fontsize=0.5) + 
             Button(description='Clear', button_style='warning', on_interact=self.clear_output)
             ).display()
 

@@ -1,5 +1,5 @@
 from functools import wraps
-from .base import BooleanBase, StandardBase
+from .base import *
 
 standard_widgets = ['Audio',
                     'HTML',
