@@ -78,8 +78,7 @@ class App:
                 elif len(row)==2:
                     cls.set_store(store=row[0], default=row[1])
         
-        if hasattr(cls, 'make'):
-            cls.make = cls._build(cls.make)
+        cls.make = cls._build(cls._make(cls.make))
     
     def __init__(self, **kwargs):
         self._base = None 
@@ -88,16 +87,22 @@ class App:
         self.children = AppGroup()
         
         self.set_config(**kwargs)
-
         self.base = kwargs.get('base')
-        
-        if hasattr(self, 'make'):
-            self.make(**self.config)
-            
+        self.make(**self.config)
+
+    def _make(self, func):
+        @functools.wraps(func)
+        def wrapper(self, **kwargs):
+            self.set_config(**kwargs)
+            func(self, **kwargs)
+        return wrapper
+
+    def make(self, **kwargs):
+        pass
+
     def update(self, **kwargs):
         self.set_config(update=True, **kwargs)
-        if hasattr(self, 'make'):
-            self.make(**self.config)
+        self.make(**self.config)
     
     @property
     def app_layout(self):
@@ -114,6 +119,18 @@ class App:
     def config(self):
         return self._config
     
+    @property
+    def base(self):
+        return self._base
+    
+    @base.setter
+    def base(self, app):
+        if app is not None:
+            self.children = app.children
+            self._app_layout = app.app_layout
+            self._base = app
+            self.build()
+
     @property
     def name(self):
         return self.config.get('name')
@@ -207,18 +224,6 @@ class App:
         obj.build()
         return obj
     
-    @property
-    def base(self):
-        return self._base
-    
-    @base.setter
-    def base(self, app):
-        if app is not None:
-            self.children = app.children
-            self._app_layout = app.app_layout
-            self._base = app
-            self.build()
-    
     def __iter__(self):
         yield from self.children.__iter__()
     
@@ -253,6 +258,7 @@ class App:
         widgets = self._subset(include=include, exclude=exclude)
         for v in widgets.values():
             getattr(v.wridget.widget, name).run(*args, **kwargs)
+
 
 class AppGroup:
     def __init__(self, *args, **kwargs):
@@ -307,6 +313,9 @@ class AppGroup:
         
 
 class Wridget:
+    def __init_subclass__(cls) -> None:
+        assert hasattr(cls, '_widget_types'), 'Subclasses of wridget must specify _widget_types'
+
     def _set_wridget(self, **kwargs):
         assert kwargs.get('widget_type') in self._widget_types, f'Allowed types are {self._widget_types}'
         try:
@@ -325,7 +334,6 @@ class Wridget:
 class Label(App, Wridget):
     _widget_types = 'HTML',
     def make(self, **kwargs):
-        self.set_config(**kwargs)
         kwargs.setdefault('widget_type', 'HTML')
         kwargs.setdefault('label', '')
         kwargs.setdefault('fontsize', 1)
@@ -337,7 +345,6 @@ class Label(App, Wridget):
 class Button(App, Wridget):
     _widget_types = 'Button',
     def make(self, **kwargs):
-        self.set_config(**kwargs)
         kwargs.setdefault('widget_type', 'Button')
         kwargs.setdefault('value', None)
         kwargs.setdefault('layout', {'width': 'auto'})
@@ -348,7 +355,6 @@ class Button(App, Wridget):
 class Field(App, Wridget):
     _widget_types = ('Text', 'Textarea', 'IntText', 'FloatText', 'BoundedIntText', 'BoundedFloatText')
     def make(self, **kwargs):
-        self.set_config(**kwargs)
         kwargs.setdefault('widget_type', 'Text')
         kwargs.setdefault('continuous_update', False)
         kwargs.setdefault('layout', {'width': 'auto'})
@@ -359,7 +365,6 @@ class Field(App, Wridget):
 class SelectButtons(App, Wridget):
     _widget_types = 'ToggleButtons', 'RadioButtons'
     def make(self, **kwargs):
-        self.set_config(**kwargs)
         kwargs.setdefault('widget_type', 'ToggleButtons')
         kwargs.setdefault('options', ())
         kwargs.setdefault('style', {'button_width': 'auto'})
@@ -370,7 +375,6 @@ class SelectButtons(App, Wridget):
 class ToggleButton(App, Wridget):
     _widget_types = 'ToggleButton',
     def make(self, **kwargs):
-        self.set_config(**kwargs)
         kwargs.setdefault('widget_type', 'ToggleButton')
         kwargs.setdefault('style', {'button_width': 'auto'})
         self.set_config(**kwargs, update=True)
@@ -380,7 +384,6 @@ class ToggleButton(App, Wridget):
 class Dropdown(App, Wridget):
     _widget_types = 'Dropdown',
     def make(self, **kwargs):
-        self.set_config(**kwargs)
         kwargs.setdefault('widget_type', 'Dropdown')
         kwargs.setdefault('layout',  {'width': 'auto'})
         self.set_config(**kwargs, update=True)
@@ -390,7 +393,6 @@ class Dropdown(App, Wridget):
 class Link(App, Wridget):
     _widget_types = 'HTML'
     def make(self, **kwargs):
-        self.set_config(**kwargs)
         kwargs.setdefault('widget_type', 'HTML')
         kwargs.setdefault('src', '')
         kwargs.setdefault('text', kwargs.get('src'))
