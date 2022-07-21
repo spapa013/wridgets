@@ -90,7 +90,7 @@ class App:
         self.base = kwargs.get('base')
         self.make(**self.config)
 
-    def _make(self, func):
+    def _make(func):
         @functools.wraps(func)
         def wrapper(self, **kwargs):
             self.set_config(**kwargs)
