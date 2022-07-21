@@ -29,22 +29,20 @@ class App:
                     return func(self, *args, **kwargs)
                 except Exception as e:
                     tb = traceback.format_exc()  
-                    wr.display(
-                        wr.HBox([
-                            wr.Button(
+                    (
+                        Button(
                                 on_interact=self._output.clear_output, 
                                 button_style='info', 
                                 description='Clear Output'
-                            ).widget,
-                            wr.Button(
-                                on_interact=self.print_traceback,
-                                action_kws=dict(tb=tb),
-                                output=self.output,
-                                button_style='info',
-                                description='Traceback'
-                            ).widget
-                        ])
-                    )
+                        ) + \
+                        Button(
+                            on_interact=self.print_traceback,
+                            on_interact_kws=dict(tb=tb),
+                            output=self.output,
+                            button_style='info',
+                            description='Traceback'
+                        )
+                    ).display()
                     print(e)
         return wrapper
     
@@ -142,8 +140,9 @@ class App:
     def message(self, msg:str):
         with self.output:
             self.clear_output()
-            (wr.Label(label=msg, fontsize=0.5) + 
-            Button(description='Clear', button_style='warning', on_interact=self.clear_output)
+            (
+                Label(label=msg, fontsize=0.5) + \
+                Button(description='Clear', button_style='warning', on_interact=self.clear_output)
             ).display()
 
     def set_config(self, update=False, **kwargs):
