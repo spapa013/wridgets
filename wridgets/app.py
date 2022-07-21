@@ -140,10 +140,13 @@ class App:
     def message(self, msg:str):
         with self.output:
             self.clear_output()
-            (
-                Label(label=msg, fontsize=0.5) + \
-                Button(description='Clear', button_style='warning', on_interact=self.clear_output)
-            ).display()
+            if isinstance(msg, str):
+                Label(label=msg, fontsize=0.5).display()
+            elif isinstance(msg, App):
+                msg.display()
+            else:
+                raise AttributeError('msg type not recognized.')
+            Button(description='Clear', button_style='warning', on_interact=self.clear_output).display()
 
     def set_config(self, update=False, **kwargs):
         kwargs.setdefault('name', self.__class__.__name__)
