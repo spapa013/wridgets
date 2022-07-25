@@ -85,7 +85,8 @@ class Wridget:
         else:
             raise AttributeError('Attribute not found.')
 
-    def set(self, **kwargs):
+    def set(self, *args, **kwargs):
+        kwargs.update(args)
         for name, value in kwargs.items():
             if name in self.trait_names:
                 setattr(self, name, value)

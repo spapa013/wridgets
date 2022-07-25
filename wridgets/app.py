@@ -246,7 +246,7 @@ class App:
             else:
                 wridgets = self._subset_wridgets(include=include, exclude=exclude)
                 for wridget in wridgets.values():
-                    wridget.set(name, value)
+                    wridget.set({name: value})
 
 class AppGroup:
     def __init__(self, *args, **kwargs):
