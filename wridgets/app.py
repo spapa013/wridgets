@@ -79,7 +79,7 @@ class App:
                 row = wrap(row)
                 cls._init_store(store=row[0])
                 if len(row)==2:
-                    setattr(getattr(cls, row[0]), row[1])
+                    setattr(getattr(cls, row[0]), row[0], row[1])
         
         if hasattr(cls, 'make'):
             cls.make = cls._build(cls.make)
