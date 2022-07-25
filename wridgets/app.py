@@ -238,14 +238,15 @@ class App:
         assert len(d) == 1, f'get1 must return one value'
         return unwrap(d)
 
-    def set(self, name, value, include=None, exclude=None):
-        if name in self.trait_names:
-            setattr(self, name, value)
-            self.build()
-        else:
-            wridgets = self._subset_wridgets(include=include, exclude=exclude)
-            for wridget in wridgets.values():
-                wridget.set(name, value)
+    def set(self, include=None, exclude=None, **kwargs):
+        for name, value in kwargs.items():
+            if name in self.trait_names:
+                setattr(self, name, value)
+                self.build()
+            else:
+                wridgets = self._subset_wridgets(include=include, exclude=exclude)
+                for wridget in wridgets.values():
+                    wridget.set(name, value)
 
 class AppGroup:
     def __init__(self, *args, **kwargs):
