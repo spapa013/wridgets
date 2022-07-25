@@ -86,10 +86,11 @@ class Wridget:
             raise AttributeError('Attribute not found.')
 
     def set(self, *args, **kwargs):
-        if isinstance(args, dict):
-            kwargs.update(args)
-        else:
-            raise AttributeError('args must be a dictionary')
+        if args:
+            if isinstance(args, dict):
+                kwargs.update(args)
+            else:
+                raise AttributeError('args must be a dictionary')
         for name, value in kwargs.items():
             if name in self.trait_names:
                 setattr(self, name, value)
