@@ -88,10 +88,9 @@ class Wridget:
     def set(self, *args, **kwargs):
         if args:
             for arg in args:
-                if isinstance(arg, dict):
-                    kwargs.update(arg)
-            else:
-                raise AttributeError('args must be a dictionary')
+                assert isinstance(arg, dict), 'args must be a dictionary'
+                kwargs.update(arg)
+
         for name, value in kwargs.items():
             if name in self.trait_names:
                 setattr(self, name, value)
