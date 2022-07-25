@@ -134,6 +134,7 @@ class Button(Wridget):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.widget.add_traits(value=widgets.trait_types.traitlets.Any())
+        self.set('value', kwargs.get('value'))
 
     def observe(self):
         self.widget.on_click(self._observe)
