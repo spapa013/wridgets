@@ -319,8 +319,10 @@ class AppWridget:
 
 class Label(App, AppWridget):
     allowed_wridget_types = 'HTML',
-    def make(self, wridget_type='HTML', text='', fontsize=1, **kwargs):
-        kwargs['value'] = f"<font size='+{fontsize}'>{text}</font>"
+    def make(self, wridget_type='HTML', **kwargs):
+        kwargs.setdefault('text', '')
+        kwargs.setdefault('fontsize', 1)
+        kwargs['value'] = f"<font size='+{kwargs.get('fontsize')}'>{kwargs.get('text')}</font>"
         self._set_wridget(wridget_type=wridget_type, **kwargs)
 
 
