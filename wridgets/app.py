@@ -137,7 +137,7 @@ class App:
     def msg(self, msg:str):
         with self.output:
             self.clear_output()
-            (Label(label=msg, fontsize=0.5) + 
+            (Label(text=msg, fontsize=0.5) + 
             Button(description='Clear', button_style='warning', on_interact=self.clear_output)
             ).display()
     
