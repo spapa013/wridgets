@@ -89,7 +89,7 @@ class Wridget:
         if args:
             for arg in args:
                 if isinstance(arg, dict):
-                    kwargs.update(args)
+                    kwargs.update(arg)
             else:
                 raise AttributeError('args must be a dictionary')
         for name, value in kwargs.items():
