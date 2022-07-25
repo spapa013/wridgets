@@ -315,10 +315,10 @@ class AppWridget:
     def _set_wridget(self, **kwargs):
         assert kwargs.get('widget_type') in self._widget_types, f'Allowed types are {self._widget_types}'
         try:
-            delattr(self.children, self.config.get('name'))
+            delattr(self.children, self.name)
         except:
             pass
-        setattr(self.children, self.config.get('name'), self)
+        setattr(self.children, self.name, self)
         self.wridget = getattr(wr, kwargs.get('widget_type'))(**kwargs)
         self._app_layout = [
                 [
@@ -330,72 +330,59 @@ class AppWridget:
 class Label(App, AppWridget):
     _widget_types = 'HTML',
     def make(self, **kwargs):
-        self.set_config(**kwargs)
         kwargs.setdefault('widget_type', 'HTML')
         kwargs.setdefault('label', '')
         kwargs.setdefault('fontsize', 1)
         kwargs['value'] = f"<font size='+{kwargs.get('fontsize')}'>{kwargs.get('label')}</font>"
-        self.set_config(**kwargs, update=True)
         self._set_wridget(**kwargs)
 
 
 class Button(App, AppWridget):
     _widget_types = 'Button',
     def make(self, **kwargs):
-        self.set_config(**kwargs)
         kwargs.setdefault('widget_type', 'Button')
         kwargs.setdefault('value', None)
         kwargs.setdefault('layout', {'width': 'auto'})
-        self.set_config(**kwargs, update=True)
         self._set_wridget(**kwargs)
 
 
 class Field(App, AppWridget):
     _widget_types = ('Text', 'Textarea', 'IntText', 'FloatText', 'BoundedIntText', 'BoundedFloatText')
     def make(self, **kwargs):
-        self.set_config(**kwargs)
         kwargs.setdefault('widget_type', 'Text')
         kwargs.setdefault('continuous_update', False)
         kwargs.setdefault('layout', {'width': 'auto'})
-        self.set_config(**kwargs, update=True)
         self._set_wridget(**kwargs)
 
 
 class SelectButtons(App, AppWridget):
     _widget_types = 'ToggleButtons', 'RadioButtons'
     def make(self, **kwargs):
-        self.set_config(**kwargs)
         kwargs.setdefault('widget_type', 'ToggleButtons')
         kwargs.setdefault('options', ())
         kwargs.setdefault('style', {'button_width': 'auto'})
-        self.set_config(**kwargs, update=True)
         self._set_wridget(**kwargs)
 
 
 class ToggleButton(App, AppWridget):
     _widget_types = 'ToggleButton',
     def make(self, **kwargs):
-        self.set_config(**kwargs)
         kwargs.setdefault('widget_type', 'ToggleButton')
         kwargs.setdefault('style', {'button_width': 'auto'})
-        self.set_config(**kwargs, update=True)
         self._set_wridget(**kwargs)
 
 
 class Dropdown(App, AppWridget):
     _widget_types = 'Dropdown',
     def make(self, **kwargs):
-        self.set_config(**kwargs)
         kwargs.setdefault('widget_type', 'Dropdown')
         kwargs.setdefault('layout',  {'width': 'auto'})
-        self.set_config(**kwargs, update=True)
         self._set_wridget(**kwargs)
 
 
 class Link(App, AppWridget):
     _widget_types = 'HTML'
     def make(self, **kwargs):
-        self.set_config(**kwargs)
         kwargs.setdefault('widget_type', 'HTML')
         kwargs.setdefault('src', '')
         kwargs.setdefault('text', kwargs.get('src'))
@@ -424,5 +411,4 @@ class Link(App, AppWridget):
             <a href={kwargs.get('src')} target='_blank'>{kwargs.get('text')}</a>
             </font>
             """
-        self.set_config(**kwargs, update=True)
         self._set_wridget(**kwargs)
