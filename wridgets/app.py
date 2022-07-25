@@ -308,7 +308,7 @@ class AppWridget:
         except:
             pass
         setattr(self.children, self.name, self)
-        self.wridget = getattr(wr, wridget_type)(**kwargs)
+        self.wridget = getattr(wr, wridget_type)(output=self.output, **kwargs)
         self._app_layout = [
                 [
                     self.wridget.widget
