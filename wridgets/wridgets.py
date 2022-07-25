@@ -8,14 +8,14 @@ from .utils import init_trait
 
 
 class Wridget:
-    trait_names = [
+    trait_names = (
         'on_interact',
         'on_interact_kws',
         'on_interact_disabled',
         'output',
         'clear_previous_output',
         'widget_kws'
-    ]
+    )
 
     def set_trait_defaults(self):
         self.on_interact = None
@@ -24,7 +24,7 @@ class Wridget:
         self.clear_previous_output = True
         self.widget_kws = {}
 
-    def __init__(self, on_interact=None, on_interact_kws=None, on_interact_disabled=None, output=None, clear_previous_output=True, **widget_kws):
+    def __init__(self, on_interact=None, on_interact_kws=None, on_interact_disabled=None, output=None, clear_previous_output=None, **widget_kws):
         self._config = {}
         self.set_trait_defaults()
         if on_interact is not None:

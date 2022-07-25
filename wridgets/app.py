@@ -3,17 +3,17 @@ import traceback
 from hashlib import md5
 
 from . import wridgets as wr
-from .utils import init_trait, unwrap, wrap
+from .utils import init_trait, init_store, unwrap, wrap
 
 
 class App:
-    trait_names = [
+    trait_names = (
         'name',
         'output',
         'display_output',
         'propagate',
         'wridget_kws'
-    ]
+    )
 
     def set_trait_defaults(self):
         self.name = self.__class__.__name__
@@ -23,12 +23,7 @@ class App:
 
     _init_trait = classmethod(init_trait)
 
-    @classmethod
-    def set_store(cls, store, default=None):
-        _store = ''.join(['_', store])
-        setattr(cls, _store, default)
-        getter = lambda cls: getattr(cls, _store)
-        setattr(cls, store, property(getter))
+    _init_store = classmethod(init_store)
 
     def display(self):
         wr.display(
@@ -91,10 +86,9 @@ class App:
         if hasattr(cls, 'stores'):
             for row in cls.stores:
                 row = wrap(row)
-                if len(row)==1:
-                    cls.set_store(store=row[0])
-                elif len(row)==2:
-                    cls.set_store(store=row[0], default=row[1])
+                cls._init_store(store=row[0])
+                if len(row)==2:
+                    getattr(cls, row[0])(row[1])
         
         if hasattr(cls, 'make'):
             cls.make = cls._build(cls.make)
@@ -310,16 +304,16 @@ class AppGroup:
 
 class AppWridget:
     def __init_subclass__(cls) -> None:
-        assert hasattr(cls, '_widget_types'), 'Subclasses of wridget must specify _widget_types'
+        assert hasattr(cls, '_wridget_types'), 'Subclasses of wridget must specify _wridget_types'
     
-    def _set_wridget(self, **kwargs):
-        assert kwargs.get('widget_type') in self._widget_types, f'Allowed types are {self._widget_types}'
+    def _set_wridget(self, wridget_type, **wridget_kws):
+        assert wridget_type in self._wridget_types, f'Allowed types are {self._wridget_types}'
         try:
             delattr(self.children, self.name)
         except:
             pass
         setattr(self.children, self.name, self)
-        self.wridget = getattr(wr, kwargs.get('widget_type'))(**kwargs)
+        self.wridget = getattr(wr, wridget_type)(**wridget_kws)
         self._app_layout = [
                 [
                     self.wridget.widget
@@ -329,18 +323,16 @@ class AppWridget:
 
 class Label(App, AppWridget):
     _widget_types = 'HTML',
-    def make(self, **kwargs):
-        kwargs.setdefault('widget_type', 'HTML')
-        kwargs.setdefault('label', '')
-        kwargs.setdefault('fontsize', 1)
-        kwargs['value'] = f"<font size='+{kwargs.get('fontsize')}'>{kwargs.get('label')}</font>"
-        self._set_wridget(**kwargs)
+    def make(self, wridget_type='HTML', text='', fontsize=1, **wridget_kws):
+        self.config['wridget_type'] = wridget_type
+        wridget_kws['value'] = f"<font size='+{fontsize}'>{text}</font>"
+        self._set_wridget(**wridget_kws)
 
 
 class Button(App, AppWridget):
     _widget_types = 'Button',
     def make(self, **kwargs):
-        kwargs.setdefault('widget_type', 'Button')
+        self.config['wridget_type'] = 'Button' if wridget_type is None else wridget_type
         kwargs.setdefault('value', None)
         kwargs.setdefault('layout', {'width': 'auto'})
         self._set_wridget(**kwargs)
