@@ -96,8 +96,6 @@ class Wridget:
             raise AttributeError('Attribute not found.')
 
 
-
-
 wridget_list = ['Audio',
                 'HTML',
                 'BoundedFloatText',
