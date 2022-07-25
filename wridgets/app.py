@@ -303,11 +303,9 @@ class AppGroup:
         
 
 class AppWridget:
-    def __init_subclass__(cls) -> None:
-        assert hasattr(cls, '_wridget_types'), 'Subclasses of wridget must specify _wridget_types'
-    
     def _set_wridget(self, wridget_type, **wridget_kws):
-        assert wridget_type in self._wridget_types, f'Allowed types are {self._wridget_types}'
+        if hasattr(self, 'allowed_wridget_types'):
+            assert wridget_type in self.allowed_wridget_types, f'Allowed types are {self.allowed_wridget_types}'
         try:
             delattr(self.children, self.name)
         except:
@@ -322,85 +320,80 @@ class AppWridget:
 
 
 class Label(App, AppWridget):
-    _widget_types = 'HTML',
+    allowed_wridget_types = 'HTML',
     def make(self, wridget_type='HTML', text='', fontsize=1, **wridget_kws):
-        self.config['wridget_type'] = wridget_type
         wridget_kws['value'] = f"<font size='+{fontsize}'>{text}</font>"
-        self._set_wridget(**wridget_kws)
+        self._set_wridget(wridget_type=wridget_type, **wridget_kws)
 
 
 class Button(App, AppWridget):
-    _widget_types = 'Button',
-    def make(self, **kwargs):
-        self.config['wridget_type'] = 'Button' if wridget_type is None else wridget_type
-        kwargs.setdefault('value', None)
-        kwargs.setdefault('layout', {'width': 'auto'})
-        self._set_wridget(**kwargs)
+    allowed_wridget_types = 'Button',
+    def make(self, wridget_type='Button', **wridget_kws):
+        wridget_kws.setdefault('value', None)
+        wridget_kws.setdefault('layout', {'width': 'auto'})
+        self._set_wridget(wridget_type=wridget_type, **wridget_kws)
 
 
 class Field(App, AppWridget):
-    _widget_types = ('Text', 'Textarea', 'IntText', 'FloatText', 'BoundedIntText', 'BoundedFloatText')
-    def make(self, **kwargs):
-        kwargs.setdefault('widget_type', 'Text')
-        kwargs.setdefault('continuous_update', False)
-        kwargs.setdefault('layout', {'width': 'auto'})
-        self._set_wridget(**kwargs)
+    allowed_wridget_types = ('Text', 'Textarea', 'IntText', 'FloatText', 'BoundedIntText', 'BoundedFloatText')
+    def make(self, wridget_type='Text', **wridget_kws):
+        wridget_kws.setdefault('continuous_update', False)
+        wridget_kws.setdefault('layout', {'width': 'auto'})
+        self._set_wridget(wridget_type=wridget_type, wridget_type=wridget_type, **wridget_kws)
 
 
 class SelectButtons(App, AppWridget):
-    _widget_types = 'ToggleButtons', 'RadioButtons'
-    def make(self, **kwargs):
-        kwargs.setdefault('widget_type', 'ToggleButtons')
-        kwargs.setdefault('options', ())
-        kwargs.setdefault('style', {'button_width': 'auto'})
-        self._set_wridget(**kwargs)
+    allowed_wridget_types = 'ToggleButtons', 'RadioButtons'
+    def make(self, wridget_type='ToggleButtons', **wridget_kws):
+        wridget_kws.setdefault('options', ())
+        wridget_kws.setdefault('style', {'button_width': 'auto'})
+        self._set_wridget(wridget_type=wridget_type, wridget_type=wridget_type, **wridget_kws)
 
 
 class ToggleButton(App, AppWridget):
-    _widget_types = 'ToggleButton',
-    def make(self, **kwargs):
-        kwargs.setdefault('widget_type', 'ToggleButton')
-        kwargs.setdefault('style', {'button_width': 'auto'})
-        self._set_wridget(**kwargs)
+    allowed_wridget_types = 'ToggleButton',
+    def make(self, wridget_type='ToggleButton', **wridget_kws):
+        wridget_kws.setdefault('widget_type', 'ToggleButton')
+        wridget_kws.setdefault('style', {'button_width': 'auto'})
+        self._set_wridget(wridget_type=wridget_type, **wridget_kws)
 
 
 class Dropdown(App, AppWridget):
-    _widget_types = 'Dropdown',
-    def make(self, **kwargs):
-        kwargs.setdefault('widget_type', 'Dropdown')
-        kwargs.setdefault('layout',  {'width': 'auto'})
-        self._set_wridget(**kwargs)
+    allowed_wridget_types = 'Dropdown',
+    def make(self, wridget_type='Dropdown', **wridget_kws):
+        wridget_kws.setdefault('layout',  {'width': 'auto'})
+        self._set_wridget(wridget_type=wridget_type, **wridget_kws)
 
 
 class Link(App, AppWridget):
-    _widget_types = 'HTML'
-    def make(self, **kwargs):
-        kwargs.setdefault('widget_type', 'HTML')
-        kwargs.setdefault('src', '')
-        kwargs.setdefault('text', kwargs.get('src'))
-        kwargs.setdefault('fontsize', 1)
-        kwargs.setdefault('link_color', 'blue')
-        kwargs.setdefault('link_background_color', 'transparent')
-        kwargs.setdefault('link_text_decoration', 'underline')
-        kwargs.setdefault('visited_color', 'purple')
-        kwargs.setdefault('visited_background_color', 'transparent')
-        kwargs.setdefault('visited_text_decoration', 'underline')
-        kwargs['value'] = f"""
+    allowed_wridget_types = 'HTML'
+    def make(self, wridget_type='HTML', link_kws=None, **wridget_kws):
+        link_kws = {} if link_kws is None else link_kws
+        link_kws.setdefault('src', '')
+        link_kws.setdefault('text', link_kws.get('src'))
+        link_kws.setdefault('fontsize', 1)
+        link_kws.setdefault('link_color', 'blue')
+        link_kws.setdefault('link_background_color', 'transparent')
+        link_kws.setdefault('link_text_decoration', 'underline')
+        link_kws.setdefault('visited_color', 'purple')
+        link_kws.setdefault('visited_background_color', 'transparent')
+        link_kws.setdefault('visited_text_decoration', 'underline')
+        wridget_kws['value'] = f"""
             <style>
             a:link {{
-            color: {kwargs.get('link_color')};
-            background-color: {kwargs.get('link_background_color')};
-            text-decoration: {kwargs.get('link_text_decoration')};
+            color: {link_kws.get('link_color')};
+            background-color: {link_kws.get('link_background_color')};
+            text-decoration: {link_kws.get('link_text_decoration')};
             }}
 
             a:visited {{
-            color: {kwargs.get('visited_color')};
-            background-color: {kwargs.get('visited_background_color')};
-            text-decoration: {kwargs.get('visited_text_decoration')};
+            color: {link_kws.get('visited_color')};
+            background-color: {link_kws.get('visited_background_color')};
+            text-decoration: {link_kws.get('visited_text_decoration')};
             }}
             </style>
-            <font size='+{kwargs.get('fontsize')}'>
-            <a href={kwargs.get('src')} target='_blank'>{kwargs.get('text')}</a>
+            <font size='+{link_kws.get('fontsize')}'>
+            <a href={link_kws.get('src')} target='_blank'>{link_kws.get('text')}</a>
             </font>
             """
-        self._set_wridget(**kwargs)
+        self._set_wridget(wridget_type=wridget_type, **wridget_kws)
