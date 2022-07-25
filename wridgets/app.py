@@ -41,13 +41,13 @@ class App:
                     wr.display(
                         wr.HBox([
                             wr.Button(
-                                on_interact=self._output.clear_output, 
+                                on_interact=self.output.clear_output, 
                                 button_style='info', 
                                 description='Clear Output'
                             ).widget,
                             wr.Button(
                                 on_interact=self.print_traceback,
-                                action_kws=dict(tb=tb),
+                                on_interact_kws=dict(tb=tb),
                                 output=self.output,
                                 button_style='info',
                                 description='Traceback'
@@ -60,7 +60,7 @@ class App:
     @with_output
     def print_traceback(self, tb):
         wr.display(wr.Button(
-            on_interact=self._output.clear_output, 
+            on_interact=self.output.clear_output, 
             button_style='info', 
             description='Clear Output'
         ).widget)
@@ -78,8 +78,6 @@ class App:
             for row in cls.store_config:
                 row = wrap(row)
                 cls._init_store(store=row[0])
-                if len(row)==2:
-                    setattr(cls, row[0], row[1])
         
         if hasattr(cls, 'make'):
             cls.make = cls._build(cls.make)
@@ -96,7 +94,15 @@ class App:
     def __init__(self, core=None, name=None, output=None, display_output=None, propagate=None, **kwargs):
         self._config = {}
         self._stores = {}
+        self._core = None
         self.set_trait_defaults()
+        if hasattr(self, 'store_config'):
+            for row in self.store_config:
+                row = wrap(row)
+                if len(row)==2:
+                    setattr(self, row[0], row[1])
+                else:
+                    setattr(self, row[0], None)
         if core is not None:
             self.core = core
         else:
@@ -119,7 +125,9 @@ class App:
 
     @core.setter
     def core(self, core):
-        self.__dict__.update(core.__dict__)
+        self.app = core.app
+        self._app_layout = core._app_layout
+        self.children = core.children
         self._core = core
 
     def make(self, **kwargs):
@@ -140,12 +148,21 @@ class App:
     def clear_output(self):
         self.output.clear_output()
 
-    def msg(self, msg:str):
+    @property
+    def clear_button(self):
+        return Button(description='Clear', button_style='warning', on_interact=self.clear_output)
+
+    def msg(self, msg:str, with_clear_button=True):
+        clear_button = self.clear_button if with_clear_button else None
         with self.output:
             self.clear_output()
-            (Label(text=msg, fontsize=0.5) + 
-            Button(description='Clear', button_style='warning', on_interact=self.clear_output)
-            ).display()
+            if isinstance(msg, str):
+                (Label(text=msg, fontsize=0.5) + 
+                clear_button
+                ).display()
+            else:
+                (msg + \
+                clear_button).display()
     
     def _build(func):
         @functools.wraps(func)
@@ -203,22 +220,36 @@ class App:
             ]
         ]
     
+    def __radd__(self, other):
+        if other is None:
+            return self
+
     def __add__(self, other):
-        obj = self._union(other)
-        obj._app_layout = self._horizontal_app_layout(other)
-        obj.build()
-        return obj
+        if other is not None:
+            obj = self._union(other)
+            obj._app_layout = self._horizontal_app_layout(other)
+            obj.build()
+            return obj
+        else:
+            return self
+
+    def __rsub__(self, other):
+        if other is None:
+            return self
     
     def __sub__(self, other):
-        obj = self._union(other)
-        obj._app_layout = self._vertical_app_layout(other)
-        obj.build()
-        return obj
+        if other is not None:
+            obj = self._union(other)
+            obj._app_layout = self._vertical_app_layout(other)
+            obj.build()
+            return obj
+        else:
+            return self
     
     def __iter__(self):
         yield from self.children.__iter__()
     
-    def _subset_wridgets(self, include=None, exclude=None):
+    def wridgets(self, include=None, exclude=None):
         wridgets = {}
         for name, value in self.children:
             if isinstance(value, AppWridget):
@@ -234,7 +265,7 @@ class App:
     def get(self, name, include=None, exclude=None):
         if name in self.trait_names:
             return getattr(self, name)
-        wridgets = self._subset_wridgets(include=include, exclude=exclude)
+        wridgets = self.wridgets(include=include, exclude=exclude)
         return {wridget_name: wridget.get(name) for wridget_name, wridget in wridgets.items()}
 
     def get1(self, name, include=None, exclude=None):
@@ -250,9 +281,12 @@ class App:
                 setattr(self, name, value)
                 self.build()
             else:
-                wridgets = self._subset_wridgets(include=include, exclude=exclude)
+                wridgets = self.wridgets(include=include, exclude=exclude)
                 for wridget in wridgets.values():
-                    wridget.set({name: value})
+                    try:
+                        wridget.set({name: value})
+                    except:
+                        pass
 
 class AppGroup:
     def __init__(self, *args, **kwargs):
@@ -285,8 +319,8 @@ class AppGroup:
                 i += 1
                 name = base
                 name += str(i)
-            if getattr(value, 'name', name) != name:
-                value.set_config(name=name, update=True)
+            # if getattr(value, 'name', name) != name:
+            #     value.set_config(name=name, update=True)
             self.__dict__[name] = value
     
     def __iter__(self):
@@ -328,7 +362,10 @@ class Label(App, AppWridget):
     def make(self, wridget_type='HTML', **kwargs):
         kwargs.setdefault('text', '')
         kwargs.setdefault('fontsize', 1)
+        kwargs.setdefault('bold', False)
         kwargs['value'] = f"<font size='+{kwargs.get('fontsize')}'>{kwargs.get('text')}</font>"
+        if kwargs.get('bold'):
+            kwargs['value'] = "<b>" + kwargs['value'] + "</b>"
         self._set_wridget(wridget_type=wridget_type, **kwargs)
 
 
@@ -352,6 +389,7 @@ class SelectButtons(App, AppWridget):
     allowed_wridget_types = 'ToggleButtons', 'RadioButtons'
     def make(self, wridget_type='ToggleButtons', **kwargs):
         kwargs.setdefault('options', ())
+        kwargs.setdefault('layout', {'width': 'auto'})
         kwargs.setdefault('style', {'button_width': 'auto'})
         self._set_wridget(wridget_type=wridget_type, **kwargs)
 
@@ -360,7 +398,7 @@ class ToggleButton(App, AppWridget):
     allowed_wridget_types = 'ToggleButton',
     def make(self, wridget_type='ToggleButton', **kwargs):
         kwargs.setdefault('widget_type', 'ToggleButton')
-        kwargs.setdefault('style', {'button_width': 'auto'})
+        kwargs.setdefault('layout', {'width': 'auto'})
         self._set_wridget(wridget_type=wridget_type, **kwargs)
 
 
@@ -402,4 +440,10 @@ class Link(App, AppWridget):
             <a href={link_kws.get('src')} target='_blank'>{link_kws.get('text')}</a>
             </font>
             """
+        self._set_wridget(wridget_type=wridget_type, **kwargs)
+
+
+class Valid(App, AppWridget):
+    allowed_wridget_types = 'Valid'
+    def make(self, wridget_type='Valid', **kwargs):
         self._set_wridget(wridget_type=wridget_type, **kwargs)
