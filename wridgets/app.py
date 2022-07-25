@@ -74,8 +74,8 @@ class App:
             cls._init_trait(trait)
 
         # set stores
-        if hasattr(cls, 'stores'):
-            for row in cls.stores:
+        if hasattr(cls, 'store_config'):
+            for row in cls.store_config:
                 row = wrap(row)
                 cls._init_store(store=row[0])
                 if len(row)==2:
@@ -95,6 +95,7 @@ class App:
     
     def __init__(self, core=None, name=None, output=None, display_output=None, propagate=None, **kwargs):
         self._config = {}
+        self._stores = {}
         self.set_trait_defaults()
         if core is not None:
             self.core = core
@@ -131,6 +132,10 @@ class App:
     @property
     def config(self):
         return self._config
+
+    @property
+    def stores(self):
+        return self._stores
 
     def clear_output(self):
         self.output.clear_output()
