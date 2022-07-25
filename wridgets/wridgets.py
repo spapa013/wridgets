@@ -14,7 +14,6 @@ class Wridget:
         'on_interact_disabled',
         'output',
         'clear_previous_output',
-        'widget_kws'
     )
 
     def set_trait_defaults(self):
@@ -37,10 +36,8 @@ class Wridget:
             self.output = output
         if clear_previous_output is not None:
             self.clear_previous_output = clear_previous_output
-        if widget_kws:
-            self.widget_kws = widget_kws
         self.widget = getattr(
-            widgets, self.__class__.__name__)(**self.widget_kws)
+            widgets, self.__class__.__name__)(**widget_kws)
         self.observe()
 
     def __init_subclass__(cls) -> None:
