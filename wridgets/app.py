@@ -69,18 +69,10 @@ class App:
     def __new__(cls, *args, **kwargs):
         obj = object.__new__(cls)
         obj.app = wr.VBox()
-        return obj
-    
-    def __init_subclass__(cls):
+        
         for trait in cls.trait_names:
             cls._init_trait(trait)
 
-        # automatically assign output to methods
-        base_method_list = [func for func in dir(App) if callable(getattr(App, func))]
-        method_list = [func for func in dir(cls) if callable(getattr(cls, func)) and func not in base_method_list]
-        for method in method_list:
-            setattr(cls, method, cls.with_output(getattr(cls, method)))
-        
         # set stores
         if hasattr(cls, 'stores'):
             for row in cls.stores:
@@ -91,6 +83,15 @@ class App:
         
         if hasattr(cls, 'make'):
             cls.make = cls._build(cls.make)
+
+        return obj
+    
+    def __init_subclass__(cls):
+        # automatically assign output to methods
+        base_method_list = [func for func in dir(App) if callable(getattr(App, func))]
+        method_list = [func for func in dir(cls) if callable(getattr(cls, func)) and func not in base_method_list]
+        for method in method_list:
+            setattr(cls, method, cls.with_output(getattr(cls, method)))
     
     def __init__(self, core=None, name=None, output=None, display_output=None, propagate=None, **kwargs):
         self._config = {}
