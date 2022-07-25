@@ -40,3 +40,10 @@ def GridBox2(items:list, dims:tuple=(3, -1)):
             )
         )
     return VBox([*HBoxs])
+
+
+def init_trait(cls, trait):
+    def getter_lda(self): return self._config.get(trait)
+    setattr(cls, trait, property(getter_lda))
+    def setter_lda(self, value): return self._config.update({trait: value})
+    setattr(cls, trait, getattr(cls, trait).setter(setter_lda))
