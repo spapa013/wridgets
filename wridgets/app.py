@@ -339,7 +339,7 @@ class Field(App, AppWridget):
     def make(self, wridget_type='Text', **wridget_kws):
         wridget_kws.setdefault('continuous_update', False)
         wridget_kws.setdefault('layout', {'width': 'auto'})
-        self._set_wridget(wridget_type=wridget_type, wridget_type=wridget_type, **wridget_kws)
+        self._set_wridget(wridget_type=wridget_type, **wridget_kws)
 
 
 class SelectButtons(App, AppWridget):
@@ -347,7 +347,7 @@ class SelectButtons(App, AppWridget):
     def make(self, wridget_type='ToggleButtons', **wridget_kws):
         wridget_kws.setdefault('options', ())
         wridget_kws.setdefault('style', {'button_width': 'auto'})
-        self._set_wridget(wridget_type=wridget_type, wridget_type=wridget_type, **wridget_kws)
+        self._set_wridget(wridget_type=wridget_type, **wridget_kws)
 
 
 class ToggleButton(App, AppWridget):
