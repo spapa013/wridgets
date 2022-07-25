@@ -12,14 +12,13 @@ class App:
         'output',
         'display_output',
         'propagate',
-        'wridget_kws'
     )
 
     def set_trait_defaults(self):
         self.name = self.__class__.__name__
         self.output = wr.Output()
         self.display_output = True
-        self.wridget_kws = dict()
+        self.propagate = False
 
     _init_trait = classmethod(init_trait)
 
@@ -93,7 +92,7 @@ class App:
         if hasattr(cls, 'make'):
             cls.make = cls._build(cls.make)
     
-    def __init__(self, core=None, name=None, output=None, display_output=None, propagate=None, **wridget_kws):
+    def __init__(self, core=None, name=None, output=None, display_output=None, propagate=None, **kwargs):
         self._config = {}
         self.set_trait_defaults()
         if core is not None:
@@ -109,10 +108,8 @@ class App:
             self.display_output = display_output
         if propagate is not None:
             self.propagate = propagate
-        if wridget_kws:
-            self.wridget_kws = wridget_kws
-            
-        self.make(**self.config)
+        
+        self.make(**kwargs)
     
     @property
     def core(self):
@@ -303,7 +300,7 @@ class AppGroup:
         
 
 class AppWridget:
-    def _set_wridget(self, wridget_type, **wridget_kws):
+    def _set_wridget(self, wridget_type, **kwargs):
         if hasattr(self, 'allowed_wridget_types'):
             assert wridget_type in self.allowed_wridget_types, f'Allowed types are {self.allowed_wridget_types}'
         try:
@@ -311,7 +308,7 @@ class AppWridget:
         except:
             pass
         setattr(self.children, self.name, self)
-        self.wridget = getattr(wr, wridget_type)(**wridget_kws)
+        self.wridget = getattr(wr, wridget_type)(**kwargs)
         self._app_layout = [
                 [
                     self.wridget.widget
@@ -321,53 +318,53 @@ class AppWridget:
 
 class Label(App, AppWridget):
     allowed_wridget_types = 'HTML',
-    def make(self, wridget_type='HTML', text='', fontsize=1, **wridget_kws):
-        wridget_kws['value'] = f"<font size='+{fontsize}'>{text}</font>"
-        self._set_wridget(wridget_type=wridget_type, **wridget_kws)
+    def make(self, wridget_type='HTML', text='', fontsize=1, **kwargs):
+        kwargs['value'] = f"<font size='+{fontsize}'>{text}</font>"
+        self._set_wridget(wridget_type=wridget_type, **kwargs)
 
 
 class Button(App, AppWridget):
     allowed_wridget_types = 'Button',
-    def make(self, wridget_type='Button', **wridget_kws):
-        wridget_kws.setdefault('value', None)
-        wridget_kws.setdefault('layout', {'width': 'auto'})
-        self._set_wridget(wridget_type=wridget_type, **wridget_kws)
+    def make(self, wridget_type='Button', **kwargs):
+        kwargs.setdefault('value', None)
+        kwargs.setdefault('layout', {'width': 'auto'})
+        self._set_wridget(wridget_type=wridget_type, **kwargs)
 
 
 class Field(App, AppWridget):
     allowed_wridget_types = ('Text', 'Textarea', 'IntText', 'FloatText', 'BoundedIntText', 'BoundedFloatText')
-    def make(self, wridget_type='Text', **wridget_kws):
-        wridget_kws.setdefault('continuous_update', False)
-        wridget_kws.setdefault('layout', {'width': 'auto'})
-        self._set_wridget(wridget_type=wridget_type, **wridget_kws)
+    def make(self, wridget_type='Text', **kwargs):
+        kwargs.setdefault('continuous_update', False)
+        kwargs.setdefault('layout', {'width': 'auto'})
+        self._set_wridget(wridget_type=wridget_type, **kwargs)
 
 
 class SelectButtons(App, AppWridget):
     allowed_wridget_types = 'ToggleButtons', 'RadioButtons'
-    def make(self, wridget_type='ToggleButtons', **wridget_kws):
-        wridget_kws.setdefault('options', ())
-        wridget_kws.setdefault('style', {'button_width': 'auto'})
-        self._set_wridget(wridget_type=wridget_type, **wridget_kws)
+    def make(self, wridget_type='ToggleButtons', **kwargs):
+        kwargs.setdefault('options', ())
+        kwargs.setdefault('style', {'button_width': 'auto'})
+        self._set_wridget(wridget_type=wridget_type, **kwargs)
 
 
 class ToggleButton(App, AppWridget):
     allowed_wridget_types = 'ToggleButton',
-    def make(self, wridget_type='ToggleButton', **wridget_kws):
-        wridget_kws.setdefault('widget_type', 'ToggleButton')
-        wridget_kws.setdefault('style', {'button_width': 'auto'})
-        self._set_wridget(wridget_type=wridget_type, **wridget_kws)
+    def make(self, wridget_type='ToggleButton', **kwargs):
+        kwargs.setdefault('widget_type', 'ToggleButton')
+        kwargs.setdefault('style', {'button_width': 'auto'})
+        self._set_wridget(wridget_type=wridget_type, **kwargs)
 
 
 class Dropdown(App, AppWridget):
     allowed_wridget_types = 'Dropdown',
-    def make(self, wridget_type='Dropdown', **wridget_kws):
-        wridget_kws.setdefault('layout',  {'width': 'auto'})
-        self._set_wridget(wridget_type=wridget_type, **wridget_kws)
+    def make(self, wridget_type='Dropdown', **kwargs):
+        kwargs.setdefault('layout',  {'width': 'auto'})
+        self._set_wridget(wridget_type=wridget_type, **kwargs)
 
 
 class Link(App, AppWridget):
     allowed_wridget_types = 'HTML'
-    def make(self, wridget_type='HTML', link_kws=None, **wridget_kws):
+    def make(self, wridget_type='HTML', link_kws=None, **kwargs):
         link_kws = {} if link_kws is None else link_kws
         link_kws.setdefault('src', '')
         link_kws.setdefault('text', link_kws.get('src'))
@@ -378,7 +375,7 @@ class Link(App, AppWridget):
         link_kws.setdefault('visited_color', 'purple')
         link_kws.setdefault('visited_background_color', 'transparent')
         link_kws.setdefault('visited_text_decoration', 'underline')
-        wridget_kws['value'] = f"""
+        kwargs['value'] = f"""
             <style>
             a:link {{
             color: {link_kws.get('link_color')};
@@ -396,4 +393,4 @@ class Link(App, AppWridget):
             <a href={link_kws.get('src')} target='_blank'>{link_kws.get('text')}</a>
             </font>
             """
-        self._set_wridget(wridget_type=wridget_type, **wridget_kws)
+        self._set_wridget(wridget_type=wridget_type, **kwargs)
