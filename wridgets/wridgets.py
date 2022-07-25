@@ -19,6 +19,7 @@ class Wridget:
     def set_trait_defaults(self):
         self.on_interact = None
         self.on_interact_kws = {}
+        self.on_interact_disabled = False
         self.output = Output()
         self.clear_previous_output = True
         self.widget_kws = {}
