@@ -134,7 +134,7 @@ class App:
     def clear_output(self):
         self.output.clear_output()
 
-    def message(self, msg:str):
+    def msg(self, msg:str):
         with self.output:
             self.clear_output()
             (Label(label=msg, fontsize=0.5) + 
