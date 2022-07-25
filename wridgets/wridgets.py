@@ -85,13 +85,14 @@ class Wridget:
         else:
             raise AttributeError('Attribute not found.')
 
-    def set(self, name, value):
-        if name in self.trait_names:
-            setattr(self, name, value)
-        elif name in self.widget.trait_names():
-            setattr(self.widget, name, value)
-        else:
-            raise AttributeError('Attribute not found.')
+    def set(self, **kwargs):
+        for name, value in kwargs.items():
+            if name in self.trait_names:
+                setattr(self, name, value)
+            elif name in self.widget.trait_names():
+                setattr(self.widget, name, value)
+            else:
+                raise AttributeError('Attribute not found.')
 
 
 wridget_list = ['Audio',

@@ -223,7 +223,7 @@ class App:
             subset = set(wridgets.keys()).intersection(wrap(include))
         if exclude is not None:
             subset = set(wridgets.keys()).difference(wrap(exclude))
-        return {k: v for k, v in wridgets.items() if k in subset}
+        return {k: v.wridget for k, v in wridgets.items() if k in subset}
 
     def get(self, name, include=None, exclude=None):
         if name in self.trait_names:
