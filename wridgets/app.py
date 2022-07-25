@@ -120,6 +120,7 @@ class App:
             
         self.make(**self.config)
     
+    @property
     def core(self):
         return self._core
 
