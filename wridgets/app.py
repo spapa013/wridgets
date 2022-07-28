@@ -37,34 +37,21 @@ class App:
                 try:
                     return func(self, *args, **kwargs)
                 except Exception as e:
-                    tb = traceback.format_exc()  
-                    wr.display(
-                        wr.HBox([
-                            wr.Button(
-                                on_interact=self.output.clear_output, 
-                                button_style='info', 
-                                description='Clear Output'
-                            ).widget,
-                            wr.Button(
-                                on_interact=self.print_traceback,
-                                on_interact_kws=dict(tb=tb),
-                                output=self.output,
-                                button_style='info',
-                                description='Traceback'
-                            ).widget
-                        ])
-                    )
+                    (self.clear_button + \
+                    Button(
+                        on_interact=self.print_traceback,
+                        on_interact_kws=dict(tb=traceback.format_exc()),
+                        button_style='info',
+                        description='Traceback'
+                    )).display()
                     print(e)
         return wrapper
     
-    @with_output
     def print_traceback(self, tb):
-        wr.display(wr.Button(
-            on_interact=self.output.clear_output, 
-            button_style='info', 
-            description='Clear Output'
-        ).widget)
-        print(tb)
+        with self.output:
+            self.output.clear_output()
+            self.clear_button.display()
+            print(tb)
     
     def __new__(cls, *args, **kwargs):
         obj = object.__new__(cls)
@@ -79,8 +66,7 @@ class App:
                 row = wrap(row)
                 cls._init_store(store=row[0])
         
-        if hasattr(cls, 'make'):
-            cls.make = cls._build(cls.make)
+        cls.make = cls._build(cls.make)
 
         return obj
     
