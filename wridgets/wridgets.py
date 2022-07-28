@@ -30,7 +30,7 @@ class Wridget:
         if on_interact is not None:
             self.on_interact = on_interact
         if on_interact_kws is not None:
-            self.on_interact_kws = {}
+            self.on_interact_kws = on_interact_kws
         if on_interact_disabled is not None:
             self.on_interact_disabled = on_interact_disabled
         if output is not None:
