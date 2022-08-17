@@ -2,7 +2,7 @@ import traceback
 from functools import wraps
 
 from IPython.display import FileLink, clear_output, display
-from ipywidgets import Box, GridBox, HBox, Label, Layout, Output, VBox, widgets
+from ipywidgets import Box, VBox, HBox, Label, Layout, Style, Output, widgets, link
 
 from .utils import init_trait
 

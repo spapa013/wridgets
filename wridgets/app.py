@@ -11,7 +11,7 @@ class App:
         'name',
         'output',
         'display_output',
-        'propagate',
+        'propagate'
     )
 
     def set_trait_defaults(self):
@@ -37,13 +37,19 @@ class App:
                 try:
                     return func(self, *args, **kwargs)
                 except Exception as e:
-                    (self.clear_button + \
-                    Button(
-                        on_interact=self.print_traceback,
-                        on_interact_kws=dict(tb=traceback.format_exc()),
-                        button_style='info',
-                        description='Traceback'
-                    )).display()
+                    (
+                        Button(
+                            on_interact=self.output.clear_output,
+                            button_style='warning',
+                            description='Clear'
+                        ) + \
+                        Button(
+                            on_interact=self.print_traceback,
+                            on_interact_kws=dict(tb=traceback.format_exc()),
+                            button_style='info',
+                            description='Traceback'
+                        )
+                    ).display()
                     print(e)
         return wrapper
     
@@ -364,7 +370,7 @@ class Button(App, AppWridget):
 
 
 class Field(App, AppWridget):
-    allowed_wridget_types = ('Text', 'Textarea', 'IntText', 'FloatText', 'BoundedIntText', 'BoundedFloatText')
+    allowed_wridget_types = ('Text', 'Textarea', 'IntText', 'FloatText', 'BoundedIntText', 'BoundedFloatText', 'Password')
     def make(self, wridget_type='Text', **kwargs):
         kwargs.setdefault('continuous_update', False)
         kwargs.setdefault('layout', {'width': 'auto'})
