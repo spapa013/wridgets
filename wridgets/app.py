@@ -2,7 +2,9 @@ import functools
 import traceback
 from hashlib import md5
 
-from . import wridgets as wr
+from . import wridgets
+from IPython.display import display
+from ipywidgets import VBox, HBox, Output
 from .utils import init_trait, init_store, unwrap, wrap
 
 
@@ -16,7 +18,7 @@ class App:
 
     def set_trait_defaults(self):
         self.name = self.__class__.__name__
-        self.output = wr.Output()
+        self.output = Output()
         self.display_output = True
         self.propagate = False
 
@@ -25,7 +27,7 @@ class App:
     _init_store = classmethod(init_store)
 
     def display(self):
-        wr.display(
+        display(
             self.app
         )
     
@@ -61,7 +63,7 @@ class App:
     
     def __new__(cls, *args, **kwargs):
         obj = object.__new__(cls)
-        obj.app = wr.VBox()
+        obj.app = VBox()
         
         for trait in cls.trait_names:
             cls._init_trait(trait)
@@ -165,9 +167,9 @@ class App:
     
     def build(self):
         if self.display_output:
-            self.app.children = [wr.HBox(row) for row in self.app_layout] + [self.output]
+            self.app.children = [HBox(row) for row in self.app_layout] + [self.output]
         else:
-            self.app.children = [wr.HBox(row) for row in self.app_layout]
+            self.app.children = [HBox(row) for row in self.app_layout]
     
     @property
     def model_id(self):
@@ -341,7 +343,7 @@ class AppWridget:
         except:
             pass
         setattr(self.children, self.name, self)
-        self.wridget = getattr(wr, wridget_type)(output=self.output, **kwargs)
+        self.wridget = getattr(wridgets, wridget_type)(output=self.output, **kwargs)
         self._app_layout = [
                 [
                     self.wridget.widget
