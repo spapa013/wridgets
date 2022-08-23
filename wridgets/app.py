@@ -175,8 +175,7 @@ class App:
         else:
             self.app.children = [HBox(row) for row in self.app_layout]
         
-        if self.hide:
-            self.app.layout.display = 'none' if self.hide else None
+        self.app.layout.display = 'none' if self.hide else None
     
     @property
     def model_id(self):
