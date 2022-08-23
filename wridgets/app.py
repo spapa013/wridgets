@@ -87,7 +87,7 @@ class App:
         for method in method_list:
             setattr(cls, method, cls.with_output(getattr(cls, method)))
     
-    def __init__(self, core=None, name=None, output=None, display_output=None, propagate=None, **kwargs):
+    def __init__(self, core=None, name=None, output=None, display_output=None, propagate=None, hide=None, **kwargs):
         self._config = {}
         self._stores = {}
         self._core = None
@@ -112,6 +112,8 @@ class App:
             self.display_output = display_output
         if propagate is not None:
             self.propagate = propagate
+        if hide is not None:
+            self.hide = hide
         
         self.make(**kwargs)
     
@@ -174,9 +176,7 @@ class App:
             self.app.children = [HBox(row) for row in self.app_layout]
         
         if self.hide:
-            self.app.layout={'display': 'none'}
-        else:
-            self.app.layout={'display': None}
+            self.app.layout.display = 'none' if self.hide else None
     
     @property
     def model_id(self):
