@@ -389,7 +389,6 @@ class SelectButtons(App, AppWridget):
 class ToggleButton(App, AppWridget):
     allowed_wridget_types = 'ToggleButton',
     def make(self, wridget_type='ToggleButton', **kwargs):
-        kwargs.setdefault('widget_type', 'ToggleButton')
         kwargs.setdefault('layout', {'width': 'auto'})
         self._set_wridget(wridget_type=wridget_type, **kwargs)
 
@@ -438,4 +437,11 @@ class Link(App, AppWridget):
 class Valid(App, AppWridget):
     allowed_wridget_types = 'Valid'
     def make(self, wridget_type='Valid', **kwargs):
+        self._set_wridget(wridget_type=wridget_type, **kwargs)
+
+
+class Tags(App, AppWridget):
+    allowed_wridget_types = 'TagsInput', 'ColorsInput', 'FloatsInput', 'IntsInput'
+    def make(self, wridget_type='TagsInput', **kwargs):
+        kwargs.setdefault('allow_duplicates', False)
         self._set_wridget(wridget_type=wridget_type, **kwargs)
