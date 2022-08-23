@@ -13,7 +13,8 @@ class App:
         'name',
         'output',
         'display_output',
-        'propagate'
+        'propagate',
+        'hide'
     )
 
     def set_trait_defaults(self):
@@ -21,6 +22,7 @@ class App:
         self.output = Output()
         self.display_output = True
         self.propagate = False
+        self.hide = False
 
     _init_trait = classmethod(init_trait)
 
@@ -170,6 +172,11 @@ class App:
             self.app.children = [HBox(row) for row in self.app_layout] + [self.output]
         else:
             self.app.children = [HBox(row) for row in self.app_layout]
+        
+        if self.hide:
+            self.app.layout={'display': 'none'}
+        else:
+            self.app.layout={'display': None}
     
     @property
     def model_id(self):
