@@ -50,7 +50,7 @@ def init_trait(cls, trait):
 
 
 def init_store(cls, store):
-    def getter_lda(self): return self._stores.get(store)
+    def getter_lda(self): return self._store.get(store)
     setattr(cls, store, property(getter_lda))
-    def setter_lda(self, value): return self._stores.update({store: value})
+    def setter_lda(self, value): return self._store.update({store: value})
     setattr(cls, store, getattr(cls, store).setter(setter_lda))
