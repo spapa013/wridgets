@@ -102,6 +102,7 @@ class Wridget:
 
 wridget_list = [
     'Audio',
+    'Box',
     'BoundedFloatText',
     'BoundedIntText',
     'Button',
