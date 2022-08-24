@@ -453,3 +453,10 @@ class Tags(App, AppWridget):
     def make(self, wridget_type='TagsInput', **kwargs):
         kwargs.setdefault('allow_duplicates', False)
         self._set_wridget(wridget_type=wridget_type, **kwargs)
+
+
+class Container(App, AppWridget):
+    allowed_wridget_types = 'Box'
+    def make(self, wridget_type='Box', **kwargs):
+        kwargs.setdefault('children', [])
+        self._set_wridget(wridget_type=wridget_type, **kwargs)
