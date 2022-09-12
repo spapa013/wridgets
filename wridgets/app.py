@@ -289,6 +289,13 @@ class App:
                     #     wridget.set({name: value})
                     # except:
                     #     pass
+    
+    @property
+    def ch(self):
+        """
+        alias for children
+        """
+        return self.children
 
 class AppGroup:
     def __init__(self, *args, **kwargs):
