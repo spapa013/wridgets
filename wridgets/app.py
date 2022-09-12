@@ -358,6 +358,7 @@ class AppWridget:
                 ]
         ]
 
+# DEFAULT APPS
 
 def _make(self, **kwargs):
     self._set_wridget(wridget_type=self.wridget_type, **kwargs)
@@ -375,6 +376,7 @@ def _initialize_default_apps():
 
 _initialize_default_apps()
 
+# CUSTOM APPS
 
 class Button(App, AppWridget):
     def make(self, **kwargs):
