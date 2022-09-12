@@ -121,7 +121,6 @@ wridget_list = [
     'FloatSlider',
     'FloatText',
     'FloatsInput',
-    'HBox',
     'HTML',
     'HTMLMath',
     'Image',
