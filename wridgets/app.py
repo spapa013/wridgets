@@ -392,11 +392,11 @@ class Button(App, AppWridget):
         self._set_wridget(wridget_type='Button', **kwargs)
 
 
-# class Checkbox(App, AppWridget):
-#     def make(self, **kwargs):
-#         kwargs.setdefault('indent', False)
-#         kwargs.setdefault('layout', {'width': 'auto'})
-#         self._set_wridget(wridget_type='Checkbox', **kwargs)
+class Checkbox(App, AppWridget):
+    def make(self, **kwargs):
+        kwargs.setdefault('indent', False)
+        kwargs.setdefault('layout', {'width': 'auto'})
+        self._set_wridget(wridget_type='Checkbox', **kwargs)
 
 
 class Field(App, AppWridget):
