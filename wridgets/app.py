@@ -283,10 +283,12 @@ class App:
             else:
                 wridgets = self.wridgets(include=include, exclude=exclude)
                 for wridget in wridgets.values():
-                    try:
-                        wridget.set({name: value})
-                    except:
-                        pass
+                    wridget.set({name: value})
+                    
+                    # try:
+                    #     wridget.set({name: value})
+                    # except:
+                    #     pass
 
 class AppGroup:
     def __init__(self, *args, **kwargs):
@@ -357,60 +359,69 @@ class AppWridget:
         ]
 
 
+def _make(self, **kwargs):
+    self._set_wridget(wridget_type=self.wridget_type, **kwargs)
+    kwargs.setdefault('layout', {'width': 'auto'})
+
+
+def _initialize_default_apps():
+    for wridget in wridgets.wridget_list:
+
+        globals()[wridget] = type(wridget, (App, AppWridget), {
+            "wridget_type": wridget,
+            "make": _make,
+        })
+
+
+_initialize_default_apps()
+
+
+class Button(App, AppWridget):
+    def make(self, **kwargs):
+        kwargs.setdefault('value', None)
+        kwargs.setdefault('layout', {'width': 'auto'})
+        self._set_wridget(wridget_type='Button', **kwargs)
+
+
+class Checkbox(App, AppWridget):
+    def make(self, **kwargs):
+        kwargs.setdefault('indent', False)
+        kwargs.setdefault('layout', {'width': 'auto'})
+        self._set_wridget(wridget_type='Checkbox', **kwargs)
+
+
+class Field(App, AppWridget):
+    allowed_wridget_types = ('Text', 'Textarea', 'IntText', 'FloatText', 'BoundedIntText', 'BoundedFloatText', 'Password')
+    def make(self, **kwargs):
+        kwargs.setdefault('wridget_type', 'Text')
+        kwargs.setdefault('continuous_update', False)
+        kwargs.setdefault('layout', {'width': 'auto'})
+        self._set_wridget(wridget_type=kwargs.get('wridget_type'), **kwargs)
+
+
+class SelectButtons(App, AppWridget):
+    allowed_wridget_types = 'ToggleButtons', 'RadioButtons'
+    def make(self, **kwargs):
+        kwargs.setdefault('wridget_type', 'ToggleButtons')
+        kwargs.setdefault('options', ())
+        kwargs.setdefault('layout', {'width': 'auto'})
+        kwargs.setdefault('style', {'button_width': 'auto'})
+        self._set_wridget(wridget_type=kwargs.get('wridget_type'), **kwargs)
+
+
 class Label(App, AppWridget):
-    allowed_wridget_types = 'HTML',
-    def make(self, wridget_type='HTML', **kwargs):
+    def make(self, **kwargs):
         kwargs.setdefault('text', '')
         kwargs.setdefault('fontsize', 1)
         kwargs.setdefault('bold', False)
         kwargs['value'] = f"<font size='+{kwargs.get('fontsize')}'>{kwargs.get('text')}</font>"
         if kwargs.get('bold'):
             kwargs['value'] = "<b>" + kwargs['value'] + "</b>"
-        self._set_wridget(wridget_type=wridget_type, **kwargs)
-
-
-class Button(App, AppWridget):
-    allowed_wridget_types = 'Button',
-    def make(self, wridget_type='Button', **kwargs):
-        kwargs.setdefault('value', None)
-        kwargs.setdefault('layout', {'width': 'auto'})
-        self._set_wridget(wridget_type=wridget_type, **kwargs)
-
-
-class Field(App, AppWridget):
-    allowed_wridget_types = ('Text', 'Textarea', 'IntText', 'FloatText', 'BoundedIntText', 'BoundedFloatText', 'Password')
-    def make(self, wridget_type='Text', **kwargs):
-        kwargs.setdefault('continuous_update', False)
-        kwargs.setdefault('layout', {'width': 'auto'})
-        self._set_wridget(wridget_type=wridget_type, **kwargs)
-
-
-class SelectButtons(App, AppWridget):
-    allowed_wridget_types = 'ToggleButtons', 'RadioButtons'
-    def make(self, wridget_type='ToggleButtons', **kwargs):
-        kwargs.setdefault('options', ())
-        kwargs.setdefault('layout', {'width': 'auto'})
-        kwargs.setdefault('style', {'button_width': 'auto'})
-        self._set_wridget(wridget_type=wridget_type, **kwargs)
-
-
-class ToggleButton(App, AppWridget):
-    allowed_wridget_types = 'ToggleButton',
-    def make(self, wridget_type='ToggleButton', **kwargs):
-        kwargs.setdefault('layout', {'width': 'auto'})
-        self._set_wridget(wridget_type=wridget_type, **kwargs)
-
-
-class Dropdown(App, AppWridget):
-    allowed_wridget_types = 'Dropdown',
-    def make(self, wridget_type='Dropdown', **kwargs):
-        kwargs.setdefault('layout',  {'width': 'auto'})
-        self._set_wridget(wridget_type=wridget_type, **kwargs)
+        self._set_wridget(wridget_type='HTML', **kwargs)
 
 
 class Link(App, AppWridget):
-    allowed_wridget_types = 'HTML'
-    def make(self, wridget_type='HTML', link_kws=None, **kwargs):
+    def make(self, link_kws=None, **kwargs):
         link_kws = {} if link_kws is None else link_kws
         link_kws.setdefault('src', '')
         link_kws.setdefault('text', link_kws.get('src'))
@@ -439,24 +450,18 @@ class Link(App, AppWridget):
             <a href={link_kws.get('src')} target='_blank'>{link_kws.get('text')}</a>
             </font>
             """
-        self._set_wridget(wridget_type=wridget_type, **kwargs)
-
-
-class Valid(App, AppWridget):
-    allowed_wridget_types = 'Valid'
-    def make(self, wridget_type='Valid', **kwargs):
-        self._set_wridget(wridget_type=wridget_type, **kwargs)
+        self._set_wridget(wridget_type='HTML', **kwargs)
 
 
 class Tags(App, AppWridget):
     allowed_wridget_types = 'TagsInput', 'ColorsInput', 'FloatsInput', 'IntsInput'
-    def make(self, wridget_type='TagsInput', **kwargs):
+    def make(self, **kwargs):
+        kwargs.setdefault('wridget_type', 'TagsInput')
         kwargs.setdefault('allow_duplicates', False)
-        self._set_wridget(wridget_type=wridget_type, **kwargs)
+        self._set_wridget(wridget_type=kwargs.get('wridget_type'), **kwargs)
 
 
 class Container(App, AppWridget):
-    allowed_wridget_types = 'Box'
-    def make(self, wridget_type='Box', **kwargs):
+    def make(self, **kwargs):
         kwargs.setdefault('children', [])
-        self._set_wridget(wridget_type=wridget_type, **kwargs)
+        self._set_wridget(wridget_type='Box', **kwargs)
