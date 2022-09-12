@@ -392,11 +392,11 @@ class Button(App, AppWridget):
         self._set_wridget(wridget_type='Button', **kwargs)
 
 
-class Checkbox(App, AppWridget):
-    def make(self, **kwargs):
-        kwargs.setdefault('indent', False)
-        kwargs.setdefault('layout', {'width': 'auto'})
-        self._set_wridget(wridget_type='Checkbox', **kwargs)
+# class Checkbox(App, AppWridget):
+#     def make(self, **kwargs):
+#         kwargs.setdefault('indent', False)
+#         kwargs.setdefault('layout', {'width': 'auto'})
+#         self._set_wridget(wridget_type='Checkbox', **kwargs)
 
 
 class Field(App, AppWridget):
@@ -405,7 +405,7 @@ class Field(App, AppWridget):
         kwargs.setdefault('wridget_type', 'Text')
         kwargs.setdefault('continuous_update', False)
         kwargs.setdefault('layout', {'width': 'auto'})
-        self._set_wridget(wridget_type=kwargs.get('wridget_type'), **kwargs)
+        self._set_wridget(wridget_type=kwargs.pop('wridget_type'), **kwargs)
 
 
 class SelectButtons(App, AppWridget):
@@ -415,7 +415,7 @@ class SelectButtons(App, AppWridget):
         kwargs.setdefault('options', ())
         kwargs.setdefault('layout', {'width': 'auto'})
         kwargs.setdefault('style', {'button_width': 'auto'})
-        self._set_wridget(wridget_type=kwargs.get('wridget_type'), **kwargs)
+        self._set_wridget(wridget_type=kwargs.pop('wridget_type'), **kwargs)
 
 
 class Label(App, AppWridget):
@@ -467,7 +467,7 @@ class Tags(App, AppWridget):
     def make(self, **kwargs):
         kwargs.setdefault('wridget_type', 'TagsInput')
         kwargs.setdefault('allow_duplicates', False)
-        self._set_wridget(wridget_type=kwargs.get('wridget_type'), **kwargs)
+        self._set_wridget(wridget_type=kwargs.pop('wridget_type'), **kwargs)
 
 
 class Container(App, AppWridget):
