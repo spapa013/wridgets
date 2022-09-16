@@ -5,28 +5,35 @@ from hashlib import md5
 from . import wridgets
 from IPython.display import display
 from ipywidgets import VBox, HBox, Output
-from .utils import init_trait, init_store, unwrap, wrap
+from .utils import unwrap, wrap
 
 
 class App:
+    is_wrapp = False
+    _disable_build = False
     trait_names = (
+        'prefix', 
         'name',
         'output',
         'display_output',
         'propagate',
-        'hide'
+        'hide',
+        'minimize'
     )
 
-    def set_trait_defaults(self):
-        self.name = self.__class__.__name__
-        self.output = Output()
-        self.display_output = True
-        self.propagate = False
-        self.hide = False
+    @classmethod
+    def _init_trait(cls, trait):
+        def getter_lda(self): return self._config.get(trait)
+        setattr(cls, trait, property(getter_lda))
+        def setter_lda(self, value): self._config.update({trait: value}); self.build()
+        setattr(cls, trait, getattr(cls, trait).setter(setter_lda))
 
-    _init_trait = classmethod(init_trait)
-
-    _init_store = classmethod(init_store)
+    @classmethod
+    def _init_store(cls, store):
+        def getter_lda(self): return self._store.get(store)
+        setattr(cls, store, property(getter_lda))
+        def setter_lda(self, value): self._store.update({store: value})
+        setattr(cls, store, getattr(cls, store).setter(setter_lda))
 
     def display(self):
         display(
@@ -68,7 +75,9 @@ class App:
         obj.app = VBox()
         
         for trait in cls.trait_names:
+            cls._disable_build = True
             cls._init_trait(trait)
+            cls._disable_build = False
 
         # set store
         if hasattr(cls, 'store_config'):
@@ -77,7 +86,7 @@ class App:
                 cls._init_store(store=row[0])
         
         cls.make = cls._build(cls.make)
-
+        cls.set = cls._build(cls.set)
         return obj
     
     def __init_subclass__(cls):
@@ -87,11 +96,20 @@ class App:
         for method in method_list:
             setattr(cls, method, cls.with_output(getattr(cls, method)))
     
-    def __init__(self, core=None, name=None, output=None, display_output=None, propagate=None, hide=None, **kwargs):
+    def __init__(self, core=None, prefix=None, name=None, output=None, display_output=None, propagate=None, hide=None, minimize=None, **kwargs):
         self._config = {}
         self._store = {}
         self._core = None
-        self.set_trait_defaults()
+        self._defaults = {}
+        prefix = self.setdefault('prefix', prefix if prefix is not None else '')
+        self.setdefault('name', prefix + (name if name is not None else self.__class__.__name__))
+        self.setdefault('output', output if output is not None else Output())
+        self.setdefault('display_output', display_output if display_output is not None else True)
+        self.setdefault('propagate', propagate if propagate is not None else False)
+        self.setdefault('hide', hide if hide is not None else False)
+        self.setdefault('minimize', minimize if minimize is not None else False)
+        self.defaults.update(kwargs)
+        # UPDATE STORE
         if hasattr(self, 'store_config'):
             for row in self.store_config:
                 row = wrap(row)
@@ -99,24 +117,32 @@ class App:
                     setattr(self, row[0], row[1])
                 else:
                     setattr(self, row[0], None)
+        # SET CORE
         if core is not None:
             self.core = core
         else:
             self._app_layout = []
             self.children = AppGroup()
-        if name is not None:
-            self.name = name
-        if output is not None:
-            self.output = output
-        if display_output is not None:
-            self.display_output = display_output
-        if propagate is not None:
-            self.propagate = propagate
-        if hide is not None:
-            self.hide = hide
         
+        # UPDATE CONFIG
+        self.set_trait_defaults(build=False)
+
+        # RUN MAKE
         self.make(**kwargs)
     
+    def set_trait_defaults(self, build=True):
+        self._disable_build = True
+        self.prefix = self.getdefault('prefix')
+        self.name = self.getdefault('name')
+        self.output = self.getdefault('output') 
+        self.display_output = self.getdefault('display_output')
+        self.propagate = self.getdefault('propagate')
+        self.hide = self.getdefault('hide')
+        self.minimize = self.getdefault('minimize')
+        self._disable_build = False
+        if build:
+            self.build()
+
     @property
     def core(self):
         return self._core
@@ -143,6 +169,15 @@ class App:
     def store(self):
         return self._store
 
+    @property
+    def defaults(self):
+        return self._defaults
+
+    @defaults.setter
+    def defaults(self, default_dict:dict):
+        assert isinstance(default_dict, dict), 'defaults must be a dict'
+        self._defaults = default_dict
+
     def clear_output(self):
         self.output.clear_output()
 
@@ -155,12 +190,15 @@ class App:
         with self.output:
             self.clear_output()
             if isinstance(msg, str):
-                (Label(text=msg, fontsize=0.5) + 
-                clear_button
+                (
+                    Label(text=msg, fontsize=0.5) + \
+                    clear_button
                 ).display()
             else:
-                (msg + \
-                clear_button).display()
+                (
+                    msg + \
+                    clear_button
+                ).display()
     
     def _build(func):
         @functools.wraps(func)
@@ -170,16 +208,18 @@ class App:
         return wrapper
     
     def build(self):
-        if self.display_output:
-            self.app.children = [HBox(row) for row in self.app_layout] + [self.output]
-        else:
-            self.app.children = [HBox(row) for row in self.app_layout]
-        
-        self.app.layout.display = 'none' if self.hide else None
-    
+        if not self._disable_build:
+            if self.display_output:
+                self.app.children = [HBox(row) for row in self.app_layout] + [self.output]
+            else:
+                self.app.children = [HBox(row) for row in self.app_layout]
+            
+            self.app.layout.visibility = 'hidden' if self.hide else None
+            self.app.layout.display = 'none' if self.minimize else None
+
     @property
     def model_id(self):
-        if not isinstance(self, AppWridget):
+        if not isinstance(self, WrApp):
             ids = []
             for _, value in self.children:
                 model_id = getattr(value, 'model_id', None)
@@ -246,13 +286,10 @@ class App:
         else:
             return self
     
-    def __iter__(self):
-        yield from self.children.__iter__()
-    
     def wridgets(self, include=None, exclude=None):
         wridgets = {}
         for name, value in self.children:
-            if isinstance(value, AppWridget):
+            if isinstance(value, WrApp):
                 wridgets[name] = value
         
         subset = set(wridgets.keys())
@@ -279,16 +316,10 @@ class App:
         for name, value in kwargs.items():
             if name in self.trait_names:
                 setattr(self, name, value)
-                self.build()
             else:
                 wridgets = self.wridgets(include=include, exclude=exclude)
                 for wridget in wridgets.values():
                     wridget.set({name: value})
-                    
-                    # try:
-                    #     wridget.set({name: value})
-                    # except:
-                    #     pass
     
     @property
     def ch(self):
@@ -296,6 +327,29 @@ class App:
         alias for children
         """
         return self.children
+
+    def updatedefault(self, name, value):
+        self.defaults.update({name: value})
+
+    def setdefault(self, name, value):
+        return self.defaults.setdefault(name, value)
+
+    def getdefault(self, name, value=None):
+        return value if name not in self.defaults else self.defaults.get(name)
+    
+    def popdefault(self, name):
+        return self.defaults.pop(name)
+
+    def reset(self):
+        child_to_reset = []
+        for _, child in self.children:
+            if child.is_wrapp:
+                child_to_reset.append(child)
+        for child in child_to_reset:
+            child.set_trait_defaults(build=False)
+            child.make(**{k: v for k, v in child.defaults.items() if k not in self.trait_names})
+        self.set_trait_defaults()
+        
 
 class AppGroup:
     def __init__(self, *args, **kwargs):
@@ -349,7 +403,8 @@ class AppGroup:
         return str(tuple([a for a, _ in self if not a.startswith('_')]))
         
 
-class AppWridget:
+class WrApp:
+    is_wrapp = True
     def _set_wridget(self, wridget_type, **kwargs):
         if hasattr(self, 'allowed_wridget_types'):
             assert wridget_type in self.allowed_wridget_types, f'Allowed types are {self.allowed_wridget_types}'
@@ -368,14 +423,15 @@ class AppWridget:
 # DEFAULT APPS
 
 def _make(self, **kwargs):
-    self._set_wridget(wridget_type=self.wridget_type, **kwargs)
     kwargs.setdefault('layout', {'width': 'auto'})
+    self._set_wridget(wridget_type=self.wridget_type, **kwargs)
+    
 
 
 def _initialize_default_apps():
     for wridget in wridgets.wridget_list:
 
-        globals()[wridget] = type(wridget, (App, AppWridget), {
+        globals()[wridget] = type(wridget, (WrApp, App), {
             "wridget_type": wridget,
             "make": _make,
         })
@@ -385,21 +441,21 @@ _initialize_default_apps()
 
 # CUSTOM APPS
 
-class Button(App, AppWridget):
+class Button(WrApp, App):
     def make(self, **kwargs):
         kwargs.setdefault('value', None)
         kwargs.setdefault('layout', {'width': 'auto'})
         self._set_wridget(wridget_type='Button', **kwargs)
 
 
-class Checkbox(App, AppWridget):
+class Checkbox(WrApp, App):
     def make(self, **kwargs):
         kwargs.setdefault('indent', False)
         kwargs.setdefault('layout', {'width': 'auto'})
         self._set_wridget(wridget_type='Checkbox', **kwargs)
 
 
-class Field(App, AppWridget):
+class Field(WrApp, App):
     allowed_wridget_types = ('Text', 'Textarea', 'IntText', 'FloatText', 'BoundedIntText', 'BoundedFloatText', 'Password')
     def make(self, **kwargs):
         kwargs.setdefault('wridget_type', 'Text')
@@ -408,7 +464,7 @@ class Field(App, AppWridget):
         self._set_wridget(wridget_type=kwargs.pop('wridget_type'), **kwargs)
 
 
-class SelectButtons(App, AppWridget):
+class SelectButtons(WrApp, App):
     allowed_wridget_types = 'ToggleButtons', 'RadioButtons'
     def make(self, **kwargs):
         kwargs.setdefault('wridget_type', 'ToggleButtons')
@@ -418,18 +474,19 @@ class SelectButtons(App, AppWridget):
         self._set_wridget(wridget_type=kwargs.pop('wridget_type'), **kwargs)
 
 
-class Label(App, AppWridget):
+class Label(WrApp, App):
     def make(self, **kwargs):
-        kwargs.setdefault('text', '')
-        kwargs.setdefault('fontsize', 1)
-        kwargs.setdefault('bold', False)
-        kwargs['value'] = f"<font size='+{kwargs.get('fontsize')}'>{kwargs.get('text')}</font>"
-        if kwargs.get('bold'):
-            kwargs['value'] = "<b>" + kwargs['value'] + "</b>"
+        if 'value' not in kwargs:
+            kwargs.setdefault('text', '')
+            kwargs.setdefault('fontsize', 1)
+            kwargs.setdefault('bold', False)
+            kwargs['value'] = f"<font size='+{kwargs.get('fontsize')}'>{kwargs.get('text')}</font>"
+            if kwargs.get('bold'):
+                kwargs['value'] = "<b>" + kwargs['value'] + "</b>"
         self._set_wridget(wridget_type='HTML', **kwargs)
 
 
-class Link(App, AppWridget):
+class Link(WrApp, App):
     def make(self, link_kws=None, **kwargs):
         link_kws = {} if link_kws is None else link_kws
         link_kws.setdefault('src', '')
@@ -462,7 +519,7 @@ class Link(App, AppWridget):
         self._set_wridget(wridget_type='HTML', **kwargs)
 
 
-class Tags(App, AppWridget):
+class Tags(WrApp, App):
     allowed_wridget_types = 'TagsInput', 'ColorsInput', 'FloatsInput', 'IntsInput'
     def make(self, **kwargs):
         kwargs.setdefault('wridget_type', 'TagsInput')
@@ -470,7 +527,7 @@ class Tags(App, AppWridget):
         self._set_wridget(wridget_type=kwargs.pop('wridget_type'), **kwargs)
 
 
-class Container(App, AppWridget):
+class Container(WrApp, App):
     def make(self, **kwargs):
         kwargs.setdefault('children', [])
         self._set_wridget(wridget_type='Box', **kwargs)

@@ -4,8 +4,6 @@ from functools import wraps
 from IPython.display import FileLink, clear_output, display
 from ipywidgets import VBox, HBox, Label, Layout, Style, Output, widgets, link
 
-from .utils import init_trait
-
 
 class Wridget:
     trait_names = (
@@ -16,27 +14,13 @@ class Wridget:
         'clear_previous_output',
     )
 
-    def set_trait_defaults(self):
-        self.on_interact = None
-        self.on_interact_kws = {}
-        self.on_interact_disabled = False
-        self.output = Output()
-        self.clear_previous_output = True
-        self.widget_kws = {}
-
     def __init__(self, on_interact=None, on_interact_kws=None, on_interact_disabled=None, output=None, clear_previous_output=None, **widget_kws):
         self._config = {}
-        self.set_trait_defaults()
-        if on_interact is not None:
-            self.on_interact = on_interact
-        if on_interact_kws is not None:
-            self.on_interact_kws = on_interact_kws
-        if on_interact_disabled is not None:
-            self.on_interact_disabled = on_interact_disabled
-        if output is not None:
-            self.output = output
-        if clear_previous_output is not None:
-            self.clear_previous_output = clear_previous_output
+        self.on_interact = on_interact
+        self.on_interact_kws = on_interact_kws if on_interact_kws is not None else {}
+        self.on_interact_disabled = on_interact_disabled if on_interact_disabled is not None else False
+        self.output = output if output is not None else Output()
+        self.clear_previous_output = clear_previous_output if clear_previous_output is not None else True
         self.widget = getattr(
             widgets, self.__class__.__name__)(**widget_kws)
         self.observe()
@@ -45,7 +29,12 @@ class Wridget:
         for trait in cls.trait_names:
             cls._init_trait(trait)
 
-    _init_trait = classmethod(init_trait)
+    @classmethod
+    def _init_trait(cls, trait):
+        def getter_lda(self): return self._config.get(trait)
+        setattr(cls, trait, property(getter_lda))
+        def setter_lda(self, value): self._config.update({trait: value})
+        setattr(cls, trait, getattr(cls, trait).setter(setter_lda))
 
     def display(self):
         display(self.widget)
@@ -82,8 +71,6 @@ class Wridget:
             return getattr(self, name)
         elif name in self.widget.trait_names():
             return getattr(self.widget, name)
-        else:
-            raise AttributeError('Attribute not found.')
 
     def set(self, *args, **kwargs):
         if args:
@@ -96,8 +83,6 @@ class Wridget:
                 setattr(self, name, value)
             elif name in self.widget.trait_names():
                 setattr(self.widget, name, value)
-            else:
-                raise AttributeError('Attribute not found.')
 
 
 wridget_list = [
