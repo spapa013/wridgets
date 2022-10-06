@@ -3,7 +3,7 @@ import traceback
 from hashlib import md5
 
 from . import wridgets
-from IPython.display import display
+from IPython.display import display, clear_output
 from ipywidgets import VBox, HBox, Output
 from .utils import unwrap, wrap
 
@@ -299,16 +299,18 @@ class App:
             subset = set(wridgets.keys()).difference(wrap(exclude))
         return {k: v.wridget for k, v in wridgets.items() if k in subset}
 
-    def get(self, name, include=None, exclude=None):
-        if name in self.trait_names:
-            return getattr(self, name)
-        wridgets = self.wridgets(include=include, exclude=exclude)
-        return {wridget_name: wridget.get(name) for wridget_name, wridget in wridgets.items()}
+    def get(self, name, include=None, exclude=None, skip_children=False, children_only=False):
+        if not children_only:
+            if name in self.trait_names:
+                return getattr(self, name)
+        if not skip_children:
+            wridgets = self.wridgets(include=include, exclude=exclude)
+            return {wridget_name: wridget.get(name) for wridget_name, wridget in wridgets.items()}
 
-    def get1(self, name, include=None, exclude=None):
+    def get1(self, name, include=None, exclude=None, skip_children=False, children_only=False):
         if name in self.trait_names:
             return getattr(self, name)
-        d = list(self.get(name=name, include=include, exclude=exclude).values())
+        d = list(self.get(name=name, include=include, exclude=exclude, skip_children=skip_children, children_only=children_only).values())
         assert len(d) == 1, f'get1 must return one value'
         return unwrap(d)
 
@@ -349,7 +351,7 @@ class App:
             child.set_trait_defaults(build=False)
             child.make(**{k: v for k, v in child.defaults.items() if k not in self.trait_names})
         self.set_trait_defaults()
-        
+
 
 class AppGroup:
     def __init__(self, *args, **kwargs):
@@ -442,10 +444,12 @@ _initialize_default_apps()
 # CUSTOM APPS
 
 class Button(WrApp, App):
+    allowed_wridget_types = 'Button', 'ToggleButton'
     def make(self, **kwargs):
+        kwargs.setdefault('wridget_type', 'Button')
         kwargs.setdefault('value', None)
         kwargs.setdefault('layout', {'width': 'auto'})
-        self._set_wridget(wridget_type='Button', **kwargs)
+        self._set_wridget(wridget_type=kwargs.pop('wridget_type'), **kwargs)
 
 
 class Checkbox(WrApp, App):
@@ -464,13 +468,21 @@ class Field(WrApp, App):
         self._set_wridget(wridget_type=kwargs.pop('wridget_type'), **kwargs)
 
 
-class SelectButtons(WrApp, App):
+class Buttons(WrApp, App):
     allowed_wridget_types = 'ToggleButtons', 'RadioButtons'
     def make(self, **kwargs):
         kwargs.setdefault('wridget_type', 'ToggleButtons')
         kwargs.setdefault('options', ())
         kwargs.setdefault('layout', {'width': 'auto'})
         kwargs.setdefault('style', {'button_width': 'auto'})
+        self._set_wridget(wridget_type=kwargs.pop('wridget_type'), **kwargs)
+
+
+class Select(WrApp, App):
+    allowed_wridget_types = 'Select', 'SelectMultiple'
+    def make(self, **kwargs):
+        kwargs.setdefault('wridget_type', 'Select')
+        kwargs.setdefault('layout', {'width': 'auto'})
         self._set_wridget(wridget_type=kwargs.pop('wridget_type'), **kwargs)
 
 
@@ -486,7 +498,7 @@ class Label(WrApp, App):
         self._set_wridget(wridget_type='HTML', **kwargs)
 
 
-class Link(WrApp, App):
+class HTMLink(WrApp, App):
     def make(self, link_kws=None, **kwargs):
         link_kws = {} if link_kws is None else link_kws
         link_kws.setdefault('src', '')
@@ -528,6 +540,24 @@ class Tags(WrApp, App):
 
 
 class Container(WrApp, App):
-    def make(self, **kwargs):
-        kwargs.setdefault('children', [])
+    def make(self, contents=None, **kwargs):
+        kwargs.setdefault('container', Output())
+        self.container = kwargs.pop('container')
+        kwargs.setdefault('children', [self.container])
         self._set_wridget(wridget_type='Box', **kwargs)
+        self.contents = contents
+
+    @property
+    def contents(self):
+        return self._contents
+
+    @contents.setter
+    def contents(self, contents=None):
+        self._contents = contents
+        self._display_contents()
+    
+    def _display_contents(self):
+        with self.container:
+            clear_output()
+            if self.contents is not None:
+                display(self.contents)
