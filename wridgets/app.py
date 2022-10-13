@@ -3,7 +3,7 @@ import traceback
 from hashlib import md5
 
 from . import wridgets
-from IPython.display import display, clear_output
+from IPython.display import display
 from ipywidgets import VBox, HBox, Output
 from .utils import unwrap, wrap
 
@@ -18,7 +18,8 @@ class App:
         'display_output',
         'propagate',
         'hide',
-        'minimize'
+        'minimize',
+        'clear_previous_output'
     )
 
     @classmethod
@@ -44,7 +45,8 @@ class App:
         @functools.wraps(func)
         def wrapper(self, *args, **kwargs):
             with self.output:
-                self.output.clear_output()
+                if self.clear_previous_output:
+                    self.output.clear_output()
                 try:
                     return func(self, *args, **kwargs)
                 except Exception as e:
@@ -96,7 +98,7 @@ class App:
         for method in method_list:
             setattr(cls, method, cls.with_output(getattr(cls, method)))
     
-    def __init__(self, core=None, prefix=None, name=None, output=None, display_output=None, propagate=None, hide=None, minimize=None, **kwargs):
+    def __init__(self, core=None, prefix=None, name=None, output=None, display_output=None, propagate=None, hide=None, minimize=None, clear_previous_output=None, **kwargs):
         self._config = {}
         self._store = {}
         self._core = None
@@ -108,6 +110,7 @@ class App:
         self.setdefault('propagate', propagate if propagate is not None else False)
         self.setdefault('hide', hide if hide is not None else False)
         self.setdefault('minimize', minimize if minimize is not None else False)
+        self.setdefault('clear_previous_output', clear_previous_output if clear_previous_output is not None else True)
         self.defaults.update(kwargs)
         # UPDATE STORE
         if hasattr(self, 'store_config'):
@@ -139,6 +142,7 @@ class App:
         self.propagate = self.getdefault('propagate')
         self.hide = self.getdefault('hide')
         self.minimize = self.getdefault('minimize')
+        self.clear_previous_output = self.getdefault('clear_previous_output')
         self._disable_build = False
         if build:
             self.build()
@@ -540,24 +544,35 @@ class Tags(WrApp, App):
 
 
 class Container(WrApp, App):
+    _container = None
+    _contents = None
+    
     def make(self, contents=None, **kwargs):
         kwargs.setdefault('container', Output())
         self.container = kwargs.pop('container')
         kwargs.setdefault('children', [self.container])
         self._set_wridget(wridget_type='Box', **kwargs)
         self.contents = contents
-
+    
+    @property
+    def container(self):
+        return self._container
+    
     @property
     def contents(self):
         return self._contents
-
+    
+    @container.setter
+    def container(self, container):
+        self._container = container
+    
     @contents.setter
-    def contents(self, contents=None):
+    def contents(self, contents):
         self._contents = contents
         self._display_contents()
     
     def _display_contents(self):
         with self.container:
-            clear_output()
+            self.container.clear_output()
             if self.contents is not None:
                 display(self.contents)
