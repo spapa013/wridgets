@@ -430,13 +430,11 @@ class WrApp:
 
 def _make(self, **kwargs):
     kwargs.setdefault('layout', {'width': 'auto'})
-    self._set_wridget(wridget_type=self.wridget_type, **kwargs)
-    
+    self._set_wridget(wridget_type=self.wridget_type, **kwargs)    
 
 
 def _initialize_default_apps():
     for wridget in wridgets.wridget_list:
-
         globals()[wridget] = type(wridget, (WrApp, App), {
             "wridget_type": wridget,
             "make": _make,
